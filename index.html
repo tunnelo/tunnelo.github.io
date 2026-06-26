@@ -511,9 +511,13 @@ a{color:inherit;text-decoration:none;}
           </div>
 
           <form id="contact-form" onsubmit="submitContact(event)" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">NAME</label><input type="text" placeholder="Your name" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
-            <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">EMAIL</label><input type="email" placeholder="you@company.com" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
-            <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">COMPANY</label><input type="text" placeholder="Company / organisation" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
+            <input type="hidden" name="_subject" value="New project enquiry — Dev Tunnel">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="project_type" id="project-type-value" value="Custom software">
+            <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">NAME</label><input type="text" name="name" required maxlength="100" placeholder="Your name" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
+            <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">EMAIL</label><input type="email" name="email" required maxlength="254" placeholder="you@company.com" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
+            <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">COMPANY</label><input type="text" name="company" maxlength="120" placeholder="Company / organisation" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
             <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">WHAT DO YOU NEED?</label>
               <div style="display:flex;gap:9px;flex-wrap:wrap;" id="project-type-chips">
                 <span onclick="selectChip(this)" data-selected="true" style="padding:8px 14px;border:1px solid #3b82f6;background:rgba(59,130,246,.12);color:#9cc0ff;border-radius:9px;font:500 13px 'Hanken Grotesk';cursor:pointer;">Custom software</span>
@@ -522,8 +526,9 @@ a{color:inherit;text-decoration:none;}
                 <span onclick="selectChip(this)" style="padding:8px 14px;border:1px solid #23272f;color:#9aa0ab;border-radius:9px;font:500 13px 'Hanken Grotesk';cursor:pointer;">Management</span>
               </div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">PROJECT DETAILS</label><textarea placeholder="What are you trying to build or solve?" rows="4" style="padding:13px 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px/1.5 'Hanken Grotesk';outline:none;resize:vertical;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"></textarea></div>
-            <button type="submit" style="grid-column:1/3;display:inline-flex;align-items:center;justify-content:center;gap:9px;height:52px;background:#3b82f6;color:#fff;border:none;border-radius:11px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Send message<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">PROJECT DETAILS</label><textarea name="message" required maxlength="3000" placeholder="What are you trying to build or solve?" rows="4" style="padding:13px 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px/1.5 'Hanken Grotesk';outline:none;resize:vertical;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"></textarea></div>
+            <div id="contact-error" style="display:none;grid-column:1/3;font:500 13px 'Hanken Grotesk';color:#f0883e;"></div>
+            <button id="contact-submit" type="submit" style="grid-column:1/3;display:inline-flex;align-items:center;justify-content:center;gap:9px;height:52px;background:#3b82f6;color:#fff;border:none;border-radius:11px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Send message<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
           </form>
         </div>
 
@@ -531,8 +536,8 @@ a{color:inherit;text-decoration:none;}
           <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:24px;">
             <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#5f6671;margin-bottom:18px;">REACH US DIRECTLY</div>
             <div style="display:flex;align-items:center;gap:13px;padding:11px 0;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">EMAIL</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">hello@devtunnel.io</div></div></div>
-            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">PHONE</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">+233 30 294 6410</div></div></div>
-            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#56d364" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">WHATSAPP</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">+233 20 000 1112</div></div></div>
+            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">PHONE</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">0551326529</div></div></div>
+            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#56d364" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">WHATSAPP</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">0551326529</div></div></div>
             <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">LOCATION</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">Accra, Ghana · Remote worldwide</div></div></div>
           </div>
           <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:24px;">
@@ -567,7 +572,7 @@ a{color:inherit;text-decoration:none;}
       <div>
         <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#5f6671;margin-bottom:14px;">CONTACT</div>
         <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">hello@devtunnel.io</div>
-        <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">+233 30 294 6410</div>
+        <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">0551326529</div>
         <div onclick="go('contact')" style="font-size:13.5px;color:#3b82f6;padding:5px 0;cursor:pointer;">Start a project &#8594;</div>
       </div>
       <div>
@@ -600,6 +605,10 @@ function go(page) {
   if (page === 'contact') {
     document.getElementById('contact-form').style.display = 'grid';
     document.getElementById('contact-success').style.display = 'none';
+    var err = document.getElementById('contact-error');
+    if (err) { err.style.display = 'none'; }
+    var btn = document.getElementById('contact-submit');
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
   }
 }
 
@@ -614,13 +623,62 @@ function selectChip(el) {
   el.style.background = 'rgba(59,130,246,.12)';
   el.style.color = '#9cc0ff';
   el.setAttribute('data-selected', 'true');
+  var hidden = document.getElementById('project-type-value');
+  if (hidden) { hidden.value = el.textContent.trim(); }
 }
+
+var CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/joshuahamashua@gmail.com';
 
 function submitContact(e) {
   e.preventDefault();
-  document.getElementById('contact-form').style.display = 'none';
-  var s = document.getElementById('contact-success');
-  s.style.display = 'flex';
+  var form = document.getElementById('contact-form');
+  var errBox = document.getElementById('contact-error');
+  var btn = document.getElementById('contact-submit');
+
+  var name = (form.elements['name'].value || '').trim();
+  var email = (form.elements['email'].value || '').trim();
+  var message = (form.elements['message'].value || '').trim();
+
+  // client-side validation
+  var err = '';
+  if (!name) { err = 'Please enter your name.'; }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err = 'Please enter a valid email address.'; }
+  else if (!message) { err = 'Please tell us a bit about your project.'; }
+  if (err) { errBox.textContent = err; errBox.style.display = 'block'; return; }
+  errBox.style.display = 'none';
+
+  var payload = {
+    name: name,
+    email: email,
+    company: (form.elements['company'].value || '').trim(),
+    project_type: document.getElementById('project-type-value').value,
+    message: message,
+    _subject: 'New project enquiry — Dev Tunnel',
+    _template: 'table',
+    _captcha: 'false'
+  };
+
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+  btn.style.cursor = 'default';
+
+  fetch(CONTACT_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(res) {
+    if (!res.ok) { throw new Error('Request failed (' + res.status + ')'); }
+    return res.json();
+  }).then(function() {
+    form.style.display = 'none';
+    document.getElementById('contact-success').style.display = 'flex';
+  }).catch(function() {
+    errBox.textContent = 'Something went wrong sending your message. Please email hello@devtunnel.io directly.';
+    errBox.style.display = 'block';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  });
 }
 
 go('home');
