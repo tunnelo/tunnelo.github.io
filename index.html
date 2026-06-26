@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dev Tunnel — Software Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#0a0b0e;}
+a{color:inherit;text-decoration:none;}
+::selection{background:rgba(240,136,62,.3);color:#fff;}
+@keyframes dt-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes dt-float-sm{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes dt-glow{0%,100%{opacity:.55}50%{opacity:.9}}
+@keyframes dt-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+::-webkit-scrollbar{width:11px;height:11px;}
+::-webkit-scrollbar-track{background:#0a0b0e;}
+::-webkit-scrollbar-thumb{background:#23272f;border-radius:6px;border:3px solid #0a0b0e;}
+</style>
+</head>
+<body>
+<div id="app" style="min-height:100vh;background:#0a0b0e;color:#eef0f3;font-family:'Hanken Grotesk',system-ui,sans-serif;position:relative;overflow-x:hidden;">
+
+  <!-- ambient grid + vignette -->
+  <div style="position:fixed;inset:0;background-image:linear-gradient(rgba(38,43,52,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(38,43,52,.35) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0;-webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000,transparent 80%);mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000,transparent 80%);"></div>
+  <div style="position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(240,136,62,.10),transparent 60%);pointer-events:none;z-index:0;"></div>
+
+  <!-- NAV -->
+  <nav style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,11,14,.72);border-bottom:1px solid #1b1f26;">
+    <div style="max-width:1240px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;gap:40px;">
+      <div onclick="go('home')" style="display:flex;align-items:center;gap:11px;cursor:pointer;">
+        <div style="position:relative;width:26px;height:26px;filter:drop-shadow(0 4px 10px rgba(59,130,246,.45));">
+          <div style="position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,50% 50%,0 25%);background:#6fa8ff;"></div>
+          <div style="position:absolute;inset:0;clip-path:polygon(0 25%,50% 50%,50% 100%,0 75%);background:#2f6fe0;"></div>
+          <div style="position:absolute;inset:0;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%);background:#1d47b0;"></div>
+        </div>
+        <div style="font:700 17px 'Space Grotesk';letter-spacing:-.01em;">Dev<span style="color:#3b82f6;">Tunnel</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-left:8px;">
+        <div onclick="go('home')" class="nav-link" data-page="home" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Home<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('services')" class="nav-link" data-page="services" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Services<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('work')" class="nav-link" data-page="work" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Work<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('about')" class="nav-link" data-page="about" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">About<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('contact')" class="nav-link" data-page="contact" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Contact<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+      </div>
+      <div onclick="go('contact')" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;background:#3b82f6;color:#fff;border-radius:9px;font:600 14px 'Hanken Grotesk';cursor:pointer;box-shadow:0 6px 20px rgba(59,130,246,.32);">Start a project<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </div>
+  </nav>
+
+  <!-- ============ HOME ============ -->
+  <div id="page-home" class="page" style="position:relative;z-index:1;">
+
+    <!-- HERO -->
+    <section style="max-width:1240px;margin:0 auto;padding:70px 40px 40px;display:grid;grid-template-columns:1fr 580px;gap:40px;align-items:center;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px;border:1px solid #2a2f39;border-radius:100px;background:rgba(18,20,25,.6);margin-bottom:26px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#3fb950;box-shadow:0 0 10px #3fb950;"></span>
+          <span style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#9298a3;">SOFTWARE&nbsp;STUDIO&nbsp;·&nbsp;AVAILABLE&nbsp;FOR&nbsp;WORK</span>
+        </div>
+        <h1 style="font:700 64px/1.04 'Space Grotesk';letter-spacing:-.03em;margin:0 0 22px;color:#fff;">We build software that <span style="color:#3b82f6;">solves real problems.</span></h1>
+        <p style="font-size:18px;line-height:1.6;color:#9aa0ab;max-width:520px;margin:0 0 32px;">Dev Tunnel is a product engineering studio. We design, build, and <span style="color:#d4d8df;">manage</span> the software that runs your business — from agentic support systems to broadcast platforms and full web products.</p>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:38px;">
+          <div onclick="go('work')" style="display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 24px;background:#3b82f6;color:#fff;border-radius:11px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 8px 28px rgba(59,130,246,.34);">View our work<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div onclick="go('contact')" style="display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 22px;border:1px solid rgba(59,130,246,.5);color:#7aa2f7;border-radius:11px;font:600 15px 'Hanken Grotesk';cursor:pointer;background:rgba(59,130,246,.09);">Start a project</div>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:11px;padding:13px 17px;border:1px solid #1e222a;border-radius:11px;background:#0d0f13;font:500 13px 'IBM Plex Mono';color:#7e8590;">
+          <span style="color:#f0883e;">~/dev-tunnel</span><span style="color:#5f6671;">$</span><span style="color:#c4c9d2;">deploy --prod</span><span style="color:#3fb950;">&#10003; shipped</span><span style="display:inline-block;width:8px;height:16px;background:#f0883e;animation:dt-blink 1.1s step-end infinite;"></span>
+        </div>
+      </div>
+
+      <!-- 3D STAGE -->
+      <div style="position:relative;height:540px;perspective:1600px;">
+        <div style="position:absolute;width:420px;height:420px;left:90px;top:70px;background:radial-gradient(circle,rgba(240,136,62,.30),transparent 62%);filter:blur(24px);animation:dt-glow 5s ease-in-out infinite;"></div>
+        <div style="position:absolute;left:-60px;right:-60px;bottom:6px;height:300px;background-image:linear-gradient(rgba(240,136,62,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(95,102,113,.3) 1px,transparent 1px);background-size:40px 40px;transform:rotateX(74deg);transform-origin:bottom center;opacity:.6;-webkit-mask-image:radial-gradient(ellipse at center top,#000 25%,transparent 72%);mask-image:radial-gradient(ellipse at center top,#000 25%,transparent 72%);"></div>
+
+        <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(8deg) rotateY(-22deg);">
+          <!-- back card: Wireless -->
+          <div style="position:absolute;left:30px;top:18px;width:312px;border-radius:12px;overflow:hidden;border:1px solid #2a2f39;background:#0e1014;transform:translateZ(-55px) translateX(-6px);box-shadow:0 30px 60px rgba(0,0,0,.6);opacity:.92;">
+            <div style="height:26px;background:#15181e;border-bottom:1px solid #23272f;display:flex;align-items:center;gap:5px;padding:0 11px;"><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="margin-left:9px;font:500 9px 'IBM Plex Mono';color:#5f6671;">wireless · web</span></div>
+            <img src="assets/work-wireless.png" alt="Wireless website" style="display:block;width:100%;height:148px;object-fit:cover;object-position:top;"/>
+          </div>
+          <!-- mid card: Sent -->
+          <div style="position:absolute;left:118px;top:166px;width:330px;border-radius:12px;overflow:hidden;border:1px solid #2f343e;background:#0e1014;transform:translateZ(18px);box-shadow:20px 26px 0 -6px #0b0c0f,0 36px 70px rgba(0,0,0,.6);">
+            <div style="height:27px;background:#15181e;border-bottom:1px solid #23272f;display:flex;align-items:center;gap:5px;padding:0 11px;"><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="margin-left:9px;font:500 9px 'IBM Plex Mono';color:#5f6671;">sent · sms platform</span></div>
+            <img src="assets/work-sent.png" alt="SMS platform" style="display:block;width:100%;height:158px;object-fit:cover;object-position:top left;"/>
+          </div>
+          <!-- front card: Konnect -->
+          <div style="position:absolute;left:44px;top:310px;width:352px;border-radius:13px;overflow:hidden;border:1px solid #353b46;background:#0e1014;transform:translateZ(82px);box-shadow:24px 30px 0 -6px #0b0c0f,0 44px 90px rgba(0,0,0,.7);">
+            <div style="height:28px;background:#15181e;border-bottom:1px solid #23272f;display:flex;align-items:center;gap:5px;padding:0 12px;"><span style="width:8px;height:8px;border-radius:50%;background:#f0883e;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="margin-left:9px;font:500 9px 'IBM Plex Mono';color:#8a909b;">konnect · agentic support</span></div>
+            <img src="assets/work-konnect.png" alt="Konnect support desk" style="display:block;width:100%;height:182px;object-fit:cover;object-position:top left;"/>
+          </div>
+          <!-- floating cube -->
+          <div style="position:absolute;right:8px;top:40px;width:46px;height:46px;transform:translateZ(120px);animation:dt-float 4.5s ease-in-out infinite;filter:drop-shadow(0 12px 20px rgba(59,130,246,.55));">
+            <div style="position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,50% 50%,0 25%);background:#6fa8ff;"></div>
+            <div style="position:absolute;inset:0;clip-path:polygon(0 25%,50% 50%,50% 100%,0 75%);background:#2f6fe0;"></div>
+            <div style="position:absolute;inset:0;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%);background:#1d47b0;"></div>
+          </div>
+          <!-- floating mono chip -->
+          <div style="position:absolute;left:-18px;top:150px;transform:translateZ(100px);animation:dt-float-sm 4s ease-in-out infinite;padding:7px 12px;background:#121419;border:1px solid #2c313b;border-radius:9px;font:600 11px 'IBM Plex Mono';color:#3fb950;box-shadow:0 14px 30px rgba(0,0,0,.5);">&#9679; 99.9% uptime</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section style="max-width:1240px;margin:0 auto;padding:18px 40px 60px;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #1e222a;border-radius:16px;background:linear-gradient(180deg,#101216,#0c0e12);overflow:hidden;">
+        <div style="padding:26px 28px;border-right:1px solid #1b1f26;"><div style="font:700 34px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">03</div><div style="font:500 13px 'IBM Plex Mono';color:#7e8590;margin-top:6px;letter-spacing:.04em;">PRODUCTS SHIPPED</div></div>
+        <div style="padding:26px 28px;border-right:1px solid #1b1f26;"><div style="font:700 34px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">4,976</div><div style="font:500 13px 'IBM Plex Mono';color:#7e8590;margin-top:6px;letter-spacing:.04em;">USERS REACHED</div></div>
+        <div style="padding:26px 28px;border-right:1px solid #1b1f26;"><div style="font:700 34px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">24/7</div><div style="font:500 13px 'IBM Plex Mono';color:#7e8590;margin-top:6px;letter-spacing:.04em;">SYSTEMS MONITORED</div></div>
+        <div style="padding:26px 28px;"><div style="font:700 34px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">100%</div><div style="font:500 13px 'IBM Plex Mono';color:#7e8590;margin-top:6px;letter-spacing:.04em;">IN-HOUSE BUILT</div></div>
+      </div>
+    </section>
+
+    <!-- FEATURED WORK -->
+    <section style="max-width:1240px;margin:0 auto;padding:40px 40px 70px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:34px;">
+        <div>
+          <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.18em;color:#f0883e;margin-bottom:13px;">// SELECTED WORK</div>
+          <h2 style="font:700 40px/1.05 'Space Grotesk';letter-spacing:-.025em;margin:0;color:#fff;">Things we've shipped.</h2>
+        </div>
+        <div onclick="go('work')" style="display:inline-flex;align-items:center;gap:8px;font:600 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;padding-bottom:6px;">All projects<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f0883e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+        <!-- Konnect -->
+        <div onclick="go('work')" style="border:1px solid #1e222a;border-radius:16px;overflow:hidden;background:#0d0f13;cursor:pointer;transition:border-color .2s,transform .2s;" onmouseover="this.style.borderColor='#3a4150';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#1e222a';this.style.transform='translateY(0)'">
+          <div style="position:relative;height:184px;overflow:hidden;border-bottom:1px solid #1b1f26;"><img src="assets/work-konnect.png" alt="Konnect" style="width:100%;height:100%;object-fit:cover;object-position:top left;"/><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,#0d0f13);"></div></div>
+          <div style="padding:20px 21px 22px;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;"><span style="font:700 17px 'Space Grotesk';color:#fff;">Konnect</span><span style="padding:3px 9px;background:rgba(240,136,62,.13);color:#f0883e;border-radius:6px;font:600 10px 'IBM Plex Mono';letter-spacing:.05em;">AGENTIC AI</span></div>
+            <p style="font-size:13.5px;line-height:1.55;color:#8a909b;margin:0 0 15px;">Automated support desk with agentic troubleshooting, smart escalation, and built-in ticketing across WhatsApp.</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">React</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">LLM agents</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">WebSockets</span></div>
+          </div>
+        </div>
+        <!-- Sent -->
+        <div onclick="go('work')" style="border:1px solid #1e222a;border-radius:16px;overflow:hidden;background:#0d0f13;cursor:pointer;transition:border-color .2s,transform .2s;" onmouseover="this.style.borderColor='#3a4150';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#1e222a';this.style.transform='translateY(0)'">
+          <div style="position:relative;height:184px;overflow:hidden;border-bottom:1px solid #1b1f26;"><img src="assets/work-sent.png" alt="Sent" style="width:100%;height:100%;object-fit:cover;object-position:top left;"/><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,#0d0f13);"></div></div>
+          <div style="padding:20px 21px 22px;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;"><span style="font:700 17px 'Space Grotesk';color:#fff;">Sent</span><span style="padding:3px 9px;background:rgba(91,141,239,.14);color:#7aa2f7;border-radius:6px;font:600 10px 'IBM Plex Mono';letter-spacing:.05em;">SMS PLATFORM</span></div>
+            <p style="font-size:13.5px;line-height:1.55;color:#8a909b;margin:0 0 15px;">Segmented SMS broadcasting — pull customers from groups, compose, schedule, and track delivery logs at scale.</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">React</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Node</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">MikroTik</span></div>
+          </div>
+        </div>
+        <!-- Wireless -->
+        <div onclick="go('work')" style="border:1px solid #1e222a;border-radius:16px;overflow:hidden;background:#0d0f13;cursor:pointer;transition:border-color .2s,transform .2s;" onmouseover="this.style.borderColor='#3a4150';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#1e222a';this.style.transform='translateY(0)'">
+          <div style="position:relative;height:184px;overflow:hidden;border-bottom:1px solid #1b1f26;"><img src="assets/work-wireless.png" alt="Wireless" style="width:100%;height:100%;object-fit:cover;object-position:top;"/><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,#0d0f13);"></div></div>
+          <div style="padding:20px 21px 22px;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;"><span style="font:700 17px 'Space Grotesk';color:#fff;">Wireless</span><span style="padding:3px 9px;background:rgba(63,185,80,.14);color:#56d364;border-radius:6px;font:600 10px 'IBM Plex Mono';letter-spacing:.05em;">WEB · SELF-SERVICE</span></div>
+            <p style="font-size:13.5px;line-height:1.55;color:#8a909b;margin:0 0 15px;">A complete ISP marketing site and self-service portal — packages, sign-up, renewals, and online payments.</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Next.js</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Tailwind</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Payments</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BAND -->
+    <section style="max-width:1240px;margin:0 auto;padding:0 40px 80px;">
+      <div style="position:relative;border:1px solid #2a2f39;border-radius:20px;background:linear-gradient(135deg,#15110c,#0d0f13 55%);overflow:hidden;padding:54px 56px;">
+        <div style="position:absolute;right:-60px;top:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(240,136,62,.22),transparent 65%);"></div>
+        <div style="position:relative;display:flex;align-items:center;gap:40px;">
+          <div style="flex:1;">
+            <h2 style="font:700 38px/1.08 'Space Grotesk';letter-spacing:-.025em;margin:0 0 14px;color:#fff;">Have a problem worth solving?</h2>
+            <p style="font-size:16.5px;line-height:1.55;color:#9aa0ab;max-width:520px;margin:0;">Tell us what's slowing you down. We'll architect, build, and keep it running.</p>
+          </div>
+          <div onclick="go('contact')" style="flex:none;display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 28px;background:#3b82f6;color:#fff;border-radius:12px;font:600 16px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Start a project<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============ SERVICES ============ -->
+  <div id="page-services" class="page" style="display:none;position:relative;z-index:1;">
+    <section style="max-width:1240px;margin:0 auto;padding:64px 40px 30px;">
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:flex-end;">
+        <div>
+          <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.18em;color:#f0883e;margin-bottom:15px;">// WHAT WE DO</div>
+          <h1 style="font:700 54px/1.04 'Space Grotesk';letter-spacing:-.03em;margin:0 0 18px;color:#fff;">Software, end&nbsp;to&nbsp;end.</h1>
+          <p style="font-size:17px;line-height:1.6;color:#9aa0ab;max-width:560px;margin:0;">We don't just ship and disappear. Dev Tunnel takes a problem from first sketch to a running, monitored, maintained system — and stays on to keep it solid.</p>
+        </div>
+        <div style="position:relative;height:170px;display:flex;align-items:center;justify-content:flex-end;">
+          <div style="position:relative;width:120px;height:120px;animation:dt-float 5s ease-in-out infinite;filter:drop-shadow(0 18px 28px rgba(59,130,246,.5));">
+            <div style="position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,50% 50%,0 25%);background:#6fa8ff;"></div>
+            <div style="position:absolute;inset:0;clip-path:polygon(0 25%,50% 50%,50% 100%,0 75%);background:#2f6fe0;"></div>
+            <div style="position:absolute;inset:0;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%);background:#1d47b0;"></div>
+          </div>
+          <div style="position:absolute;left:6px;top:18px;width:54px;height:54px;animation:dt-float-sm 4.2s ease-in-out infinite;opacity:.9;">
+            <div style="position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,50% 50%,0 25%);background:#3a4150;"></div>
+            <div style="position:absolute;inset:0;clip-path:polygon(0 25%,50% 50%,50% 100%,0 75%);background:#252b34;"></div>
+            <div style="position:absolute;inset:0;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%);background:#1a1f27;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section style="max-width:1240px;margin:0 auto;padding:30px 40px 30px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:46px;height:46px;border-radius:11px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <h3 style="font:700 19px 'Space Grotesk';margin:0 0 9px;color:#fff;">Custom Software</h3>
+          <p style="font-size:14px;line-height:1.6;color:#8a909b;margin:0 0 16px;">Bespoke web and internal tools built around your exact workflow — not a template forced to fit.</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Dashboards</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Portals</span></div>
+        </div>
+        <div style="border:1px solid #2a2f39;border-radius:16px;background:linear-gradient(180deg,#0c1320,#0d0f13);padding:26px 24px;">
+          <div style="width:46px;height:46px;border-radius:11px;background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.34);display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0-3 3 3 3 0 0 0 0 6 3 3 0 0 0 3 3v1a3 3 0 0 0 6 0v-1a3 3 0 0 0 3-3 3 3 0 0 0 0-6 3 3 0 0 0-3-3V5a3 3 0 0 0-3-3Z"/><path d="M12 8v8M9 12h6"/></svg></div>
+          <h3 style="font:700 19px 'Space Grotesk';margin:0 0 9px;color:#fff;">Agentic AI &amp; Automation</h3>
+          <p style="font-size:14px;line-height:1.6;color:#9aa0ab;margin:0 0 16px;">AI agents that troubleshoot, triage, and escalate on their own — like the support brain behind Konnect.</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #1d3050;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7aa2f7;">LLM agents</span><span style="padding:4px 9px;border:1px solid #1d3050;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7aa2f7;">RAG</span></div>
+        </div>
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:46px;height:46px;border-radius:11px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <h3 style="font:700 19px 'Space Grotesk';margin:0 0 9px;color:#fff;">Web &amp; Platform</h3>
+          <p style="font-size:14px;line-height:1.6;color:#8a909b;margin:0 0 16px;">Marketing sites, self-service portals, and payment flows that load fast and convert — like Wireless.</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Next.js</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Payments</span></div>
+        </div>
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:46px;height:46px;border-radius:11px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></svg></div>
+          <h3 style="font:700 19px 'Space Grotesk';margin:0 0 9px;color:#fff;">Software Management</h3>
+          <p style="font-size:14px;line-height:1.6;color:#8a909b;margin:0 0 16px;">Updates, monitoring, backups, and fixes. We own uptime so your team can stay focused on the business.</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Maintenance</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">SLAs</span></div>
+        </div>
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:46px;height:46px;border-radius:11px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+          <h3 style="font:700 19px 'Space Grotesk';margin:0 0 9px;color:#fff;">Integrations &amp; APIs</h3>
+          <p style="font-size:14px;line-height:1.6;color:#8a909b;margin:0 0 16px;">Connect the tools you already run — gateways, hardware like MikroTik, payment rails, and messaging.</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">REST</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Webhooks</span></div>
+        </div>
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:46px;height:46px;border-radius:11px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <h3 style="font:700 19px 'Space Grotesk';margin:0 0 9px;color:#fff;">Support &amp; Monitoring</h3>
+          <p style="font-size:14px;line-height:1.6;color:#8a909b;margin:0 0 16px;">Real-time health checks and human-on-call response, so issues are caught before your users notice.</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">24/7</span><span style="padding:4px 9px;border:1px solid #23272f;border-radius:6px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Alerting</span></div>
+        </div>
+      </div>
+    </section>
+    <section style="max-width:1240px;margin:0 auto;padding:46px 40px 40px;">
+      <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.18em;color:#f0883e;margin-bottom:28px;">// HOW WE WORK</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #1e222a;border-radius:16px;background:#0d0f13;overflow:hidden;">
+        <div style="padding:28px 26px;border-right:1px solid #1b1f26;"><div style="font:600 13px 'IBM Plex Mono';color:#5f6671;margin-bottom:14px;">01</div><div style="font:700 18px 'Space Grotesk';color:#fff;margin-bottom:8px;">Discover</div><p style="font-size:13px;line-height:1.55;color:#8a909b;margin:0;">We map the real problem, the users, and the constraints before a line of code.</p></div>
+        <div style="padding:28px 26px;border-right:1px solid #1b1f26;"><div style="font:600 13px 'IBM Plex Mono';color:#5f6671;margin-bottom:14px;">02</div><div style="font:700 18px 'Space Grotesk';color:#fff;margin-bottom:8px;">Design</div><p style="font-size:13px;line-height:1.55;color:#8a909b;margin:0;">Architecture and interface, prototyped fast so you see it before we build it.</p></div>
+        <div style="padding:28px 26px;border-right:1px solid #1b1f26;"><div style="font:600 13px 'IBM Plex Mono';color:#3b82f6;margin-bottom:14px;">03</div><div style="font:700 18px 'Space Grotesk';color:#fff;margin-bottom:8px;">Build</div><p style="font-size:13px;line-height:1.55;color:#8a909b;margin:0;">Shipped in tight increments — you watch it come together, not a black box.</p></div>
+        <div style="padding:28px 26px;"><div style="font:600 13px 'IBM Plex Mono';color:#5f6671;margin-bottom:14px;">04</div><div style="font:700 18px 'Space Grotesk';color:#fff;margin-bottom:8px;">Manage</div><p style="font-size:13px;line-height:1.55;color:#8a909b;margin:0;">We keep it live — monitored, patched, and improved as you grow.</p></div>
+      </div>
+    </section>
+    <section style="max-width:1240px;margin:0 auto;padding:10px 40px 80px;">
+      <div style="position:relative;border:1px solid #2a2f39;border-radius:20px;background:linear-gradient(135deg,#0c1320,#0d0f13 55%);overflow:hidden;padding:48px 52px;display:flex;align-items:center;gap:40px;">
+        <div style="position:absolute;right:-60px;top:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.22),transparent 65%);"></div>
+        <div style="position:relative;flex:1;"><h2 style="font:700 34px/1.1 'Space Grotesk';letter-spacing:-.02em;margin:0 0 12px;color:#fff;">Not sure where to start?</h2><p style="font-size:16px;color:#9aa0ab;margin:0;max-width:480px;line-height:1.55;">Bring us the problem. We'll tell you the shortest path to a working solution.</p></div>
+        <div onclick="go('contact')" style="position:relative;flex:none;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 26px;background:#3b82f6;color:#fff;border-radius:12px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Book a call<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ WORK ============ -->
+  <div id="page-work" class="page" style="display:none;position:relative;z-index:1;">
+    <section style="max-width:1240px;margin:0 auto;padding:64px 40px 40px;">
+      <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.18em;color:#f0883e;margin-bottom:15px;">// SELECTED WORK</div>
+      <h1 style="font:700 54px/1.04 'Space Grotesk';letter-spacing:-.03em;margin:0 0 18px;color:#fff;">Things we've shipped.</h1>
+      <p style="font-size:17px;line-height:1.6;color:#9aa0ab;max-width:560px;margin:0;">Three products, in production, serving thousands of real users every day. Built and maintained by Dev Tunnel.</p>
+    </section>
+
+    <section style="max-width:1240px;margin:0 auto;padding:24px 40px;">
+      <div style="border:1px solid #1e222a;border-radius:20px;background:#0d0f13;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:1.15fr 1fr;">
+          <div style="position:relative;border-right:1px solid #1b1f26;background:#08090c;padding:30px;display:flex;align-items:center;">
+            <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid #23272f;box-shadow:0 24px 50px rgba(0,0,0,.5);">
+              <div style="height:26px;background:#15181e;border-bottom:1px solid #23272f;display:flex;align-items:center;gap:5px;padding:0 11px;"><span style="width:8px;height:8px;border-radius:50%;background:#f0883e;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span></div>
+              <img src="assets/work-konnect.png" alt="Konnect" style="display:block;width:100%;"/>
+            </div>
+          </div>
+          <div style="padding:38px 40px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><span style="font:700 26px 'Space Grotesk';color:#fff;">Konnect</span><span style="padding:4px 10px;background:rgba(240,136,62,.13);color:#f0883e;border-radius:7px;font:600 11px 'IBM Plex Mono';letter-spacing:.05em;">AGENTIC AI</span></div>
+            <div style="font:600 12px 'IBM Plex Mono';color:#5f6671;margin-bottom:8px;">THE PROBLEM</div>
+            <p style="font-size:14.5px;line-height:1.6;color:#9aa0ab;margin:0 0 20px;">A growing ISP was drowning in repetitive WhatsApp support — renewals, outages, and account questions answered by hand, one at a time.</p>
+            <div style="font:600 12px 'IBM Plex Mono';color:#5f6671;margin-bottom:8px;">WHAT WE BUILT</div>
+            <p style="font-size:14.5px;line-height:1.6;color:#9aa0ab;margin:0 0 22px;">An AI agent ("Riley") that handles conversations live — diagnosing issues, walking customers through fixes, and quietly opening and escalating tickets to humans only when needed. Categorised, searchable, with full customer context on the side.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;">
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#f0883e;">822</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">CONVOS HANDLED</div></div>
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#f0883e;">10</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">LIVE AT ONCE</div></div>
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#f0883e;">3</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">AUTO CATEGORIES</div></div>
+            </div>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">React</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Node</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">LLM agents</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">WhatsApp API</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px;margin:0 auto;padding:24px 40px;">
+      <div style="border:1px solid #1e222a;border-radius:20px;background:#0d0f13;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:1fr 1.15fr;">
+          <div style="padding:38px 40px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><span style="font:700 26px 'Space Grotesk';color:#fff;">Sent</span><span style="padding:4px 10px;background:rgba(91,141,239,.14);color:#7aa2f7;border-radius:7px;font:600 11px 'IBM Plex Mono';letter-spacing:.05em;">SMS PLATFORM</span></div>
+            <div style="font:600 12px 'IBM Plex Mono';color:#5f6671;margin-bottom:8px;">THE PROBLEM</div>
+            <p style="font-size:14.5px;line-height:1.6;color:#9aa0ab;margin:0 0 20px;">Reaching nearly 5,000 customers with the right message — renewals, outages, promos — meant slow, error-prone manual sends with no record of what landed.</p>
+            <div style="font:600 12px 'IBM Plex Mono';color:#5f6671;margin-bottom:8px;">WHAT WE BUILT</div>
+            <p style="font-size:14.5px;line-height:1.6;color:#9aa0ab;margin:0 0 22px;">A broadcast platform that pulls customers straight from live groups — Stations &amp; AP, DATA, CNC, SPEED — lets you compose with templates, schedule, and watch every message in the delivery log. Synced from MikroTik.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;">
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#7aa2f7;">4,976</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">CUSTOMERS</div></div>
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#7aa2f7;">4</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">LIVE GROUPS</div></div>
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#7aa2f7;">100%</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">LOGGED</div></div>
+            </div>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">React</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Node</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">MikroTik</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">SMS Gateway</span></div>
+          </div>
+          <div style="position:relative;border-left:1px solid #1b1f26;background:#08090c;padding:30px;display:flex;align-items:center;">
+            <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid #23272f;box-shadow:0 24px 50px rgba(0,0,0,.5);">
+              <div style="height:26px;background:#15181e;border-bottom:1px solid #23272f;display:flex;align-items:center;gap:5px;padding:0 11px;"><span style="width:8px;height:8px;border-radius:50%;background:#7aa2f7;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span></div>
+              <img src="assets/work-sent.png" alt="Sent" style="display:block;width:100%;"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px;margin:0 auto;padding:24px 40px;">
+      <div style="border:1px solid #1e222a;border-radius:20px;background:#0d0f13;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:1.15fr 1fr;">
+          <div style="position:relative;border-right:1px solid #1b1f26;background:#08090c;padding:30px;display:flex;align-items:center;">
+            <div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid #23272f;box-shadow:0 24px 50px rgba(0,0,0,.5);">
+              <div style="height:26px;background:#15181e;border-bottom:1px solid #23272f;display:flex;align-items:center;gap:5px;padding:0 11px;"><span style="width:8px;height:8px;border-radius:50%;background:#56d364;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span><span style="width:8px;height:8px;border-radius:50%;background:#3a3f48;"></span></div>
+              <img src="assets/work-wireless.png" alt="Wireless" style="display:block;width:100%;"/>
+            </div>
+          </div>
+          <div style="padding:38px 40px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><span style="font:700 26px 'Space Grotesk';color:#fff;">Wireless</span><span style="padding:4px 10px;background:rgba(63,185,80,.14);color:#56d364;border-radius:7px;font:600 11px 'IBM Plex Mono';letter-spacing:.05em;">WEB · SELF-SERVICE</span></div>
+            <div style="font:600 12px 'IBM Plex Mono';color:#5f6671;margin-bottom:8px;">THE PROBLEM</div>
+            <p style="font-size:14.5px;line-height:1.6;color:#9aa0ab;margin:0 0 20px;">The ISP needed a face online — somewhere customers could understand packages, sign up, and renew without calling in.</p>
+            <div style="font:600 12px 'IBM Plex Mono';color:#5f6671;margin-bottom:8px;">WHAT WE BUILT</div>
+            <p style="font-size:14.5px;line-height:1.6;color:#9aa0ab;margin:0 0 22px;">A fast marketing site paired with a self-service portal: package comparison, online sign-up, renewals, refunds, and reviews — with payments wired in end to end.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;">
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#56d364;">3000+</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">CUSTOMERS</div></div>
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#56d364;">24/7</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">SELF-SERVICE</div></div>
+              <div style="border:1px solid #1e222a;border-radius:11px;padding:14px;"><div style="font:700 22px 'Space Grotesk';color:#56d364;">2</div><div style="font:500 11px 'IBM Plex Mono';color:#7e8590;margin-top:4px;">APP STORES</div></div>
+            </div>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;"><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Next.js</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Tailwind</span><span style="padding:5px 10px;border:1px solid #23272f;border-radius:7px;font:500 11px 'IBM Plex Mono';color:#7e8590;">Payments</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px;margin:0 auto;padding:34px 40px 80px;">
+      <div style="position:relative;border:1px solid #2a2f39;border-radius:20px;background:linear-gradient(135deg,#0c1320,#0d0f13 55%);overflow:hidden;padding:48px 52px;display:flex;align-items:center;gap:40px;">
+        <div style="position:absolute;right:-60px;top:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.2),transparent 65%);"></div>
+        <div style="position:relative;flex:1;"><h2 style="font:700 34px/1.1 'Space Grotesk';letter-spacing:-.02em;margin:0 0 12px;color:#fff;">Your product could be next.</h2><p style="font-size:16px;color:#9aa0ab;margin:0;max-width:480px;line-height:1.55;">Tell us what you're trying to build. We'll show you how we'd ship it.</p></div>
+        <div onclick="go('contact')" style="position:relative;flex:none;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 26px;background:#3b82f6;color:#fff;border-radius:12px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Start a project<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ ABOUT ============ -->
+  <div id="page-about" class="page" style="display:none;position:relative;z-index:1;">
+    <section style="max-width:1240px;margin:0 auto;padding:64px 40px 30px;">
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;">
+        <div>
+          <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.18em;color:#f0883e;margin-bottom:15px;">// WHO WE ARE</div>
+          <h1 style="font:700 52px/1.05 'Space Grotesk';letter-spacing:-.03em;margin:0 0 20px;color:#fff;">A small team that ships solid software.</h1>
+          <p style="font-size:16.5px;line-height:1.65;color:#9aa0ab;margin:0 0 16px;">Dev Tunnel started with a simple belief: most business problems can be solved with the right software — and most software fails because nobody stays to maintain it.</p>
+          <p style="font-size:16.5px;line-height:1.65;color:#9aa0ab;margin:0;">So we do both. We build the product, then we keep it running. From agentic support desks to SMS platforms and full web products, we treat every system like it's ours.</p>
+        </div>
+        <div style="border:1px solid #1e222a;border-radius:14px;background:#0a0c10;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.4);">
+          <div style="height:34px;background:#101216;border-bottom:1px solid #1b1f26;display:flex;align-items:center;gap:6px;padding:0 13px;"><span style="width:9px;height:9px;border-radius:50%;background:#f0883e;"></span><span style="width:9px;height:9px;border-radius:50%;background:#3a3f48;"></span><span style="width:9px;height:9px;border-radius:50%;background:#3a3f48;"></span><span style="margin-left:8px;font:500 11px 'IBM Plex Mono';color:#5f6671;">manifest.sh</span></div>
+          <div style="padding:22px 22px;font:500 13px/1.9 'IBM Plex Mono';">
+            <div style="color:#5f6671;"># what we value</div>
+            <div><span style="color:#3b82f6;">$</span> <span style="color:#c4c9d2;">solid</span> <span style="color:#56d364;">// build to last, not to demo</span></div>
+            <div><span style="color:#3b82f6;">$</span> <span style="color:#c4c9d2;">honest</span> <span style="color:#56d364;">// no black boxes, ever</span></div>
+            <div><span style="color:#3b82f6;">$</span> <span style="color:#c4c9d2;">owned</span> <span style="color:#56d364;">// we run what we ship</span></div>
+            <div><span style="color:#3b82f6;">$</span> <span style="color:#c4c9d2;">fast</span> <span style="color:#56d364;">// momentum beats perfection</span></div>
+            <div style="margin-top:6px;"><span style="color:#3b82f6;">$</span> <span style="color:#c4c9d2;">_</span><span style="display:inline-block;width:8px;height:15px;background:#3b82f6;vertical-align:middle;animation:dt-blink 1.1s step-end infinite;"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px;margin:0 auto;padding:34px 40px 20px;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #1e222a;border-radius:16px;background:linear-gradient(180deg,#101216,#0c0e12);overflow:hidden;">
+        <div style="padding:26px 28px;border-right:1px solid #1b1f26;"><div style="font:700 32px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">03</div><div style="font:500 12px 'IBM Plex Mono';color:#7e8590;margin-top:6px;">PRODUCTS LIVE</div></div>
+        <div style="padding:26px 28px;border-right:1px solid #1b1f26;"><div style="font:700 32px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">8K+</div><div style="font:500 12px 'IBM Plex Mono';color:#7e8590;margin-top:6px;">USERS SERVED</div></div>
+        <div style="padding:26px 28px;border-right:1px solid #1b1f26;"><div style="font:700 32px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">99.9%</div><div style="font:500 12px 'IBM Plex Mono';color:#7e8590;margin-top:6px;">UPTIME HELD</div></div>
+        <div style="padding:26px 28px;"><div style="font:700 32px 'Space Grotesk';color:#fff;letter-spacing:-.02em;">&#8734;</div><div style="font:500 12px 'IBM Plex Mono';color:#7e8590;margin-top:6px;">COFFEE / DAY</div></div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px;margin:0 auto;padding:30px 40px 40px;">
+      <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.18em;color:#f0883e;margin-bottom:24px;">// HOW WE OPERATE</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:42px;height:42px;border-radius:10px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+          <h3 style="font:700 17px 'Space Grotesk';margin:0 0 8px;color:#fff;">We learn your domain</h3>
+          <p style="font-size:13.5px;line-height:1.6;color:#8a909b;margin:0;">Before code, we understand the business. The best software disappears into how you already work.</p>
+        </div>
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:42px;height:42px;border-radius:10px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h3 style="font:700 17px 'Space Grotesk';margin:0 0 8px;color:#fff;">We ship in the open</h3>
+          <p style="font-size:13.5px;line-height:1.6;color:#8a909b;margin:0;">You see progress every week — working software, not status decks. No surprises at the end.</p>
+        </div>
+        <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:26px 24px;">
+          <div style="width:42px;height:42px;border-radius:10px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3 style="font:700 17px 'Space Grotesk';margin:0 0 8px;color:#fff;">We stay on</h3>
+          <p style="font-size:13.5px;line-height:1.6;color:#8a909b;margin:0;">Launch is the start. We monitor, patch, and improve so your software keeps earning its keep.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px;margin:0 auto;padding:10px 40px 80px;">
+      <div style="position:relative;border:1px solid #2a2f39;border-radius:20px;background:linear-gradient(135deg,#0c1320,#0d0f13 55%);overflow:hidden;padding:48px 52px;display:flex;align-items:center;gap:40px;">
+        <div style="position:absolute;right:-60px;top:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.2),transparent 65%);"></div>
+        <div style="position:relative;flex:1;"><h2 style="font:700 34px/1.1 'Space Grotesk';letter-spacing:-.02em;margin:0 0 12px;color:#fff;">Let's build something solid.</h2><p style="font-size:16px;color:#9aa0ab;margin:0;max-width:480px;line-height:1.55;">Tell us about your project and we'll get back within a day.</p></div>
+        <div onclick="go('contact')" style="position:relative;flex:none;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 26px;background:#3b82f6;color:#fff;border-radius:12px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Get in touch<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ CONTACT ============ -->
+  <div id="page-contact" class="page" style="display:none;position:relative;z-index:1;">
+    <section style="max-width:1240px;margin:0 auto;padding:64px 40px 80px;">
+      <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;">
+        <div>
+          <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.18em;color:#f0883e;margin-bottom:15px;">// START A PROJECT</div>
+          <h1 style="font:700 50px/1.05 'Space Grotesk';letter-spacing:-.03em;margin:0 0 18px;color:#fff;">Let's build something solid.</h1>
+          <p style="font-size:16.5px;line-height:1.6;color:#9aa0ab;max-width:480px;margin:0 0 34px;">Tell us what you're trying to solve. We'll reply within one business day with next steps.</p>
+
+          <div id="contact-success" style="display:none;border:1px solid rgba(63,185,80,.4);background:rgba(63,185,80,.08);border-radius:14px;padding:32px;display:none;align-items:center;gap:16px;">
+            <div style="width:46px;height:46px;border-radius:50%;background:rgba(63,185,80,.16);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#56d364" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div style="font:700 18px 'Space Grotesk';color:#fff;margin-bottom:4px;">Message sent — thank you.</div><div style="font-size:14px;color:#9aa0ab;">We've got your request and will be in touch shortly.</div></div>
+          </div>
+
+          <form id="contact-form" onsubmit="submitContact(event)" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">NAME</label><input type="text" placeholder="Your name" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
+            <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">EMAIL</label><input type="email" placeholder="you@company.com" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
+            <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">COMPANY</label><input type="text" placeholder="Company / organisation" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
+            <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">WHAT DO YOU NEED?</label>
+              <div style="display:flex;gap:9px;flex-wrap:wrap;" id="project-type-chips">
+                <span onclick="selectChip(this)" data-selected="true" style="padding:8px 14px;border:1px solid #3b82f6;background:rgba(59,130,246,.12);color:#9cc0ff;border-radius:9px;font:500 13px 'Hanken Grotesk';cursor:pointer;">Custom software</span>
+                <span onclick="selectChip(this)" style="padding:8px 14px;border:1px solid #23272f;color:#9aa0ab;border-radius:9px;font:500 13px 'Hanken Grotesk';cursor:pointer;">Agentic AI</span>
+                <span onclick="selectChip(this)" style="padding:8px 14px;border:1px solid #23272f;color:#9aa0ab;border-radius:9px;font:500 13px 'Hanken Grotesk';cursor:pointer;">Web / platform</span>
+                <span onclick="selectChip(this)" style="padding:8px 14px;border:1px solid #23272f;color:#9aa0ab;border-radius:9px;font:500 13px 'Hanken Grotesk';cursor:pointer;">Management</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">PROJECT DETAILS</label><textarea placeholder="What are you trying to build or solve?" rows="4" style="padding:13px 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px/1.5 'Hanken Grotesk';outline:none;resize:vertical;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"></textarea></div>
+            <button type="submit" style="grid-column:1/3;display:inline-flex;align-items:center;justify-content:center;gap:9px;height:52px;background:#3b82f6;color:#fff;border:none;border-radius:11px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Send message<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </form>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:24px;">
+            <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#5f6671;margin-bottom:18px;">REACH US DIRECTLY</div>
+            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">EMAIL</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">hello@devtunnel.io</div></div></div>
+            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">PHONE</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">+233 30 294 6410</div></div></div>
+            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#56d364" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">WHATSAPP</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">+233 20 000 1112</div></div></div>
+            <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid #16191f;"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.24);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa2f7" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div style="font-size:11px;color:#5f6671;font-family:'IBM Plex Mono';">LOCATION</div><div style="font-size:14px;color:#eef0f3;font-weight:500;">Accra, Ghana · Remote worldwide</div></div></div>
+          </div>
+          <div style="border:1px solid #1e222a;border-radius:16px;background:#0d0f13;padding:24px;">
+            <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#5f6671;margin-bottom:16px;">WHAT HAPPENS NEXT</div>
+            <div style="display:flex;gap:12px;padding:7px 0;"><span style="font:600 12px 'IBM Plex Mono';color:#3b82f6;flex:none;">01</span><span style="font-size:13.5px;color:#9aa0ab;line-height:1.5;">We read your message and reply within a day.</span></div>
+            <div style="display:flex;gap:12px;padding:7px 0;"><span style="font:600 12px 'IBM Plex Mono';color:#3b82f6;flex:none;">02</span><span style="font-size:13.5px;color:#9aa0ab;line-height:1.5;">A short call to understand the problem.</span></div>
+            <div style="display:flex;gap:12px;padding:7px 0;"><span style="font:600 12px 'IBM Plex Mono';color:#3b82f6;flex:none;">03</span><span style="font-size:13.5px;color:#9aa0ab;line-height:1.5;">A clear scope, timeline, and quote — no jargon.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="position:relative;z-index:1;border-top:1px solid #1b1f26;background:#08090c;">
+    <div style="max-width:1240px;margin:0 auto;padding:48px 40px 30px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px;">
+          <div style="position:relative;width:24px;height:24px;"><div style="position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,50% 50%,0 25%);background:#6fa8ff;"></div><div style="position:absolute;inset:0;clip-path:polygon(0 25%,50% 50%,50% 100%,0 75%);background:#2f6fe0;"></div><div style="position:absolute;inset:0;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%);background:#1d47b0;"></div></div>
+          <div style="font:700 16px 'Space Grotesk';">Dev<span style="color:#3b82f6;">Tunnel</span></div>
+        </div>
+        <p style="font-size:13.5px;line-height:1.6;color:#7e8590;max-width:280px;margin:0 0 16px;">A product engineering studio building and managing software that solves real problems.</p>
+        <div style="font:500 12px 'IBM Plex Mono';color:#5f6671;">Accra, Ghana · Remote worldwide</div>
+      </div>
+      <div>
+        <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#5f6671;margin-bottom:14px;">PAGES</div>
+        <div onclick="go('home')" style="font-size:13.5px;color:#9298a3;padding:5px 0;cursor:pointer;">Home</div>
+        <div onclick="go('services')" style="font-size:13.5px;color:#9298a3;padding:5px 0;cursor:pointer;">Services</div>
+        <div onclick="go('work')" style="font-size:13.5px;color:#9298a3;padding:5px 0;cursor:pointer;">Work</div>
+        <div onclick="go('about')" style="font-size:13.5px;color:#9298a3;padding:5px 0;cursor:pointer;">About</div>
+      </div>
+      <div>
+        <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#5f6671;margin-bottom:14px;">CONTACT</div>
+        <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">hello@devtunnel.io</div>
+        <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">+233 30 294 6410</div>
+        <div onclick="go('contact')" style="font-size:13.5px;color:#3b82f6;padding:5px 0;cursor:pointer;">Start a project &#8594;</div>
+      </div>
+      <div>
+        <div style="font:600 12px 'IBM Plex Mono';letter-spacing:.12em;color:#5f6671;margin-bottom:14px;">SOCIAL</div>
+        <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">GitHub</div>
+        <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">X / Twitter</div>
+        <div style="font-size:13.5px;color:#9298a3;padding:5px 0;">LinkedIn</div>
+      </div>
+    </div>
+    <div style="max-width:1240px;margin:0 auto;padding:18px 40px 30px;border-top:1px solid #14171c;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font:500 12px 'IBM Plex Mono';color:#5f6671;">&#169; 2026 Dev Tunnel. All systems operational.</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;font:500 12px 'IBM Plex Mono';color:#5f6671;"><span style="width:7px;height:7px;border-radius:50%;background:#3fb950;box-shadow:0 0 8px #3fb950;"></span>Online</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+var currentPage = 'home';
+
+function go(page) {
+  document.querySelectorAll('.page').forEach(function(el) { el.style.display = 'none'; });
+  document.getElementById('page-' + page).style.display = 'block';
+  document.querySelectorAll('.nav-link').forEach(function(el) {
+    var ind = el.querySelector('.nav-indicator');
+    if (el.dataset.page === page) { ind.style.display = 'block'; } else { ind.style.display = 'none'; }
+  });
+  currentPage = page;
+  window.scrollTo(0, 0);
+  if (page === 'contact') {
+    document.getElementById('contact-form').style.display = 'grid';
+    document.getElementById('contact-success').style.display = 'none';
+  }
+}
+
+function selectChip(el) {
+  document.querySelectorAll('#project-type-chips span').forEach(function(chip) {
+    chip.style.border = '1px solid #23272f';
+    chip.style.background = 'transparent';
+    chip.style.color = '#9aa0ab';
+    chip.removeAttribute('data-selected');
+  });
+  el.style.border = '1px solid #3b82f6';
+  el.style.background = 'rgba(59,130,246,.12)';
+  el.style.color = '#9cc0ff';
+  el.setAttribute('data-selected', 'true');
+}
+
+function submitContact(e) {
+  e.preventDefault();
+  document.getElementById('contact-form').style.display = 'none';
+  var s = document.getElementById('contact-success');
+  s.style.display = 'flex';
+}
+
+go('home');
+</script>
+</body>
+</html>
