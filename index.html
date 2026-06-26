@@ -511,10 +511,8 @@ a{color:inherit;text-decoration:none;}
           </div>
 
           <form id="contact-form" onsubmit="submitContact(event)" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            <input type="hidden" name="_subject" value="New project enquiry — Tunnelo">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="project_type" id="project-type-value" value="Custom software">
+            <input type="checkbox" name="botcheck" id="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
             <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">NAME</label><input type="text" name="name" required maxlength="100" placeholder="Your name" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
             <div style="display:flex;flex-direction:column;gap:7px;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">EMAIL</label><input type="email" name="email" required maxlength="254" placeholder="you@company.com" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
             <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">COMPANY</label><input type="text" name="company" maxlength="120" placeholder="Company / organisation" style="height:46px;padding:0 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px 'Hanken Grotesk';outline:none;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"/></div>
@@ -527,6 +525,7 @@ a{color:inherit;text-decoration:none;}
               </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:7px;grid-column:1/3;"><label style="font:500 12px 'IBM Plex Mono';color:#7e8590;letter-spacing:.04em;">PROJECT DETAILS</label><textarea name="message" required maxlength="3000" placeholder="What are you trying to build or solve?" rows="4" style="padding:13px 14px;background:#0d0f13;border:1px solid #23272f;border-radius:10px;color:#eef0f3;font:400 14px/1.5 'Hanken Grotesk';outline:none;resize:vertical;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#23272f'"></textarea></div>
+            <div style="grid-column:1/3;font:400 12px 'Hanken Grotesk';color:#5f6671;line-height:1.5;">We only use the details you provide here to reply to your enquiry. No newsletters, no sharing with third parties.</div>
             <div id="contact-error" style="display:none;grid-column:1/3;font:500 13px 'Hanken Grotesk';color:#f0883e;"></div>
             <button id="contact-submit" type="submit" style="grid-column:1/3;display:inline-flex;align-items:center;justify-content:center;gap:9px;height:52px;background:#3b82f6;color:#fff;border:none;border-radius:11px;font:600 15px 'Hanken Grotesk';cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.34);">Send message<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
           </form>
@@ -625,7 +624,10 @@ function selectChip(el) {
   if (hidden) { hidden.value = el.textContent.trim(); }
 }
 
-var CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/joshuahamashua@gmail.com';
+var CONTACT_ENDPOINT = 'https://api.web3forms.com/submit';
+// Get a free key at https://web3forms.com (enter your destination email, no signup).
+// Paste it below to start receiving messages.
+var WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
 
 function submitContact(e) {
   e.preventDefault();
@@ -643,17 +645,26 @@ function submitContact(e) {
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err = 'Please enter a valid email address.'; }
   else if (!message) { err = 'Please tell us a bit about your project.'; }
   if (err) { errBox.textContent = err; errBox.style.display = 'block'; return; }
+
+  // honeypot: real users never tick the hidden checkbox
+  if (form.elements['botcheck'] && form.elements['botcheck'].checked) { return; }
+
+  if (!WEB3FORMS_KEY || WEB3FORMS_KEY === 'YOUR_WEB3FORMS_ACCESS_KEY') {
+    errBox.textContent = 'The contact form is not configured yet. Please reach us by phone or WhatsApp for now.';
+    errBox.style.display = 'block';
+    return;
+  }
   errBox.style.display = 'none';
 
   var payload = {
+    access_key: WEB3FORMS_KEY,
+    subject: 'New project enquiry — Tunnelo',
+    from_name: 'Tunnelo Website',
     name: name,
     email: email,
     company: (form.elements['company'].value || '').trim(),
     project_type: document.getElementById('project-type-value').value,
-    message: message,
-    _subject: 'New project enquiry — Tunnelo',
-    _template: 'table',
-    _captcha: 'false'
+    message: message
   };
 
   btn.disabled = true;
@@ -665,9 +676,9 @@ function submitContact(e) {
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(payload)
   }).then(function(res) {
-    if (!res.ok) { throw new Error('Request failed (' + res.status + ')'); }
     return res.json();
-  }).then(function() {
+  }).then(function(data) {
+    if (!data || !data.success) { throw new Error('Submission rejected'); }
     form.style.display = 'none';
     document.getElementById('contact-success').style.display = 'flex';
   }).catch(function() {
