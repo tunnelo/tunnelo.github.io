@@ -65,8 +65,9 @@ a{color:inherit;text-decoration:none;}
   /* nav: wrap menu under logo, drop redundant top CTA button */
   nav>div{padding:10px 20px!important;height:auto!important;flex-wrap:wrap!important;gap:6px 4px!important;justify-content:center!important;}
   nav [style*="margin-left:auto"]{display:none!important;}
-  [style*="gap:6px;margin-left:8px"]{margin-left:0!important;flex-wrap:wrap!important;justify-content:center!important;width:100%!important;}
-  .nav-link{padding-left:11px!important;padding-right:11px!important;}
+  [style*="gap:6px;margin-left:8px"]{margin-left:0!important;flex-wrap:nowrap!important;justify-content:center!important;width:100%!important;gap:1px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
+  [style*="gap:6px;margin-left:8px"]::-webkit-scrollbar{display:none!important;}
+  .nav-link{padding-left:7px!important;padding-right:7px!important;font-size:12px!important;flex:0 0 auto!important;}
 
   /* collapse multi-column grids */
   [style*="grid-template-columns:1fr 580px"]{grid-template-columns:1fr!important;}
