@@ -53,6 +53,7 @@ a{color:inherit;text-decoration:none;}
 @keyframes dt-orbit{0%{transform:translate(0,-16px)}12.5%{transform:translate(11px,-11px)}25%{transform:translate(16px,0)}37.5%{transform:translate(11px,11px)}50%{transform:translate(0,16px)}62.5%{transform:translate(-11px,11px)}75%{transform:translate(-16px,0)}87.5%{transform:translate(-11px,-11px)}100%{transform:translate(0,-16px)}}
 @keyframes dt-glow{0%,100%{opacity:.55}50%{opacity:.9}}
 @keyframes dt-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.nav-link:hover{color:#111827!important;}
 ::-webkit-scrollbar{width:11px;height:11px;}
 ::-webkit-scrollbar-track{background:#0a0b0e;}
 ::-webkit-scrollbar-thumb{background:#23272f;border-radius:6px;border:3px solid #0a0b0e;}
@@ -63,11 +64,12 @@ a{color:inherit;text-decoration:none;}
   #app section{padding-left:20px!important;padding-right:20px!important;}
   footer>div{padding-left:20px!important;padding-right:20px!important;}
 
-  /* nav: wrap menu under logo, drop redundant top CTA button */
-  nav>div{padding:10px 20px!important;height:auto!important;flex-wrap:wrap!important;gap:6px 4px!important;justify-content:center!important;}
+  /* nav: shrink outer padding, white card wraps */
+  nav{padding:6px 12px!important;}
+  nav>div{height:auto!important;flex-wrap:wrap!important;gap:4px!important;justify-content:center!important;border-radius:12px!important;padding:8px 14px!important;}
   nav [style*="margin-left:auto"]{display:none!important;}
-  [style*="gap:6px;margin-left:8px"]{margin-left:0!important;flex-wrap:nowrap!important;justify-content:center!important;width:100%!important;gap:1px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
-  [style*="gap:6px;margin-left:8px"]::-webkit-scrollbar{display:none!important;}
+  #nav-links{margin-left:0!important;flex-wrap:nowrap!important;width:100%!important;gap:0!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
+  #nav-links::-webkit-scrollbar{display:none!important;}
   .nav-link{padding-left:7px!important;padding-right:7px!important;font-size:12px!important;flex:0 0 auto!important;}
 
   /* collapse multi-column grids */
@@ -118,25 +120,25 @@ a{color:inherit;text-decoration:none;}
   <div style="position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(240,136,62,.10),transparent 60%);pointer-events:none;z-index:0;"></div>
 
   <!-- NAV -->
-  <nav style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,11,14,.72);border-bottom:1px solid #1b1f26;">
-    <div style="max-width:1240px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;gap:40px;">
-      <div onclick="go('home')" style="display:flex;align-items:center;gap:11px;cursor:pointer;">
+  <nav style="position:sticky;top:0;z-index:50;background:#0a0b0e;padding:10px 40px;">
+    <div style="max-width:1240px;margin:0 auto;background:#ffffff;border-radius:16px;padding:0 20px;height:62px;display:flex;align-items:center;gap:24px;box-shadow:0 2px 20px rgba(0,0,0,.22);">
+      <div onclick="go('home')" style="display:flex;align-items:center;gap:11px;cursor:pointer;flex-shrink:0;">
         <div style="position:relative;width:26px;height:26px;filter:drop-shadow(0 4px 10px rgba(59,130,246,.45));">
           <div style="position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,50% 50%,0 25%);background:#6fa8ff;"></div>
           <div style="position:absolute;inset:0;clip-path:polygon(0 25%,50% 50%,50% 100%,0 75%);background:#2f6fe0;"></div>
           <div style="position:absolute;inset:0;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%);background:#1d47b0;"></div>
         </div>
-        <div style="font:700 17px 'Space Grotesk';letter-spacing:-.01em;">Tunnel<span style="color:#3b82f6;">o</span></div>
+        <div style="font:700 17px 'Space Grotesk';letter-spacing:-.01em;color:#0d1117;">Tunnel<span style="color:#3b82f6;">o</span></div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;margin-left:8px;">
-        <div onclick="go('home')" class="nav-link" data-page="home" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Home<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
-        <div onclick="go('services')" class="nav-link" data-page="services" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Services<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
-        <div onclick="go('work')" class="nav-link" data-page="work" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Work<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
-        <div onclick="go('about')" class="nav-link" data-page="about" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">About<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
-        <div onclick="go('contact')" class="nav-link" data-page="contact" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Contact<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
-        <div onclick="go('products')" class="nav-link" data-page="products" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#c4c9d2;cursor:pointer;">Products<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+      <div id="nav-links" style="display:flex;align-items:center;gap:2px;margin-left:8px;">
+        <div onclick="go('home')" class="nav-link" data-page="home" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#374151;cursor:pointer;">Home<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('services')" class="nav-link" data-page="services" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#374151;cursor:pointer;">Services<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('work')" class="nav-link" data-page="work" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#374151;cursor:pointer;">Work<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('about')" class="nav-link" data-page="about" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#374151;cursor:pointer;">About<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('contact')" class="nav-link" data-page="contact" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#374151;cursor:pointer;">Contact<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
+        <div onclick="go('products')" class="nav-link" data-page="products" style="position:relative;padding:8px 14px;font:500 14px 'Hanken Grotesk';color:#374151;cursor:pointer;">Products<span class="nav-indicator" style="position:absolute;left:14px;right:14px;bottom:2px;height:2px;background:#f0883e;border-radius:2px;display:none;"></span></div>
       </div>
-      <div onclick="go('contact')" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;background:#3b82f6;color:#fff;border-radius:9px;font:600 14px 'Hanken Grotesk';cursor:pointer;box-shadow:0 6px 20px rgba(59,130,246,.32);">Start a project<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <div onclick="go('contact')" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;background:#3b82f6;color:#fff;border-radius:9px;font:600 14px 'Hanken Grotesk';cursor:pointer;box-shadow:0 4px 14px rgba(59,130,246,.32);flex-shrink:0;">Start a project<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </div>
   </nav>
 
