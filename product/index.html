@@ -759,7 +759,7 @@
       <div class="dot" style="background:#e74c3c;"></div>
       <div class="dot" style="background:#f39c12;"></div>
       <div class="dot" style="background:#2ecc71;"></div>
-      <div class="preview-url">app.tunnelo.io/dashboard</div>
+      <div class="preview-url"></div>
     </div>
     <div class="preview-body">
       <div class="preview-sidebar">
@@ -779,9 +779,9 @@
         <div class="preview-nav-item"><div class="preview-nav-dot"></div>USSD Builder</div>
         <div class="preview-nav-item"><div class="preview-nav-dot"></div>Payments</div>
         <div class="preview-wallet">
-          <div class="preview-wallet-label">Wallet balance</div>
+          <div class="preview-wallet-label">SMS credit</div>
           <div class="preview-wallet-val">GHS 1,240.00</div>
-          <div class="preview-wallet-btn">Top up wallet</div>
+          <div class="preview-wallet-btn">Top up</div>
         </div>
       </div>
       <div class="preview-main">
@@ -813,7 +813,7 @@
               <div class="preview-stat-trend">↑ 48 this week</div>
             </div>
             <div class="preview-stat dark">
-              <div class="preview-stat-label">Wallet balance</div>
+              <div class="preview-stat-label">SMS credit</div>
               <div class="preview-stat-val">GHS 1,240</div>
               <div style="font-size:11px;color:#16B6A2;font-weight:600;margin-top:4px;cursor:pointer;">Top up →</div>
             </div>
@@ -952,15 +952,6 @@
       <div class="feature-desc">Pre-fund your account and pay per message. No subscriptions, no commitments. Top up instantly via mobile money or bank transfer.</div>
     </div>
 
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16B6A2" stroke-width="1.8" stroke-linecap="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-      </div>
-      <div class="feature-title">Admin Controls</div>
-      <div class="feature-desc">Full admin panel to manage users, approve sender IDs, monitor campaigns, and view platform-wide delivery stats.</div>
-    </div>
   </div>
 </section>
 
@@ -972,23 +963,20 @@
     <div>
       <div class="section-eyebrow">// USSD BUILDER</div>
       <h2 class="section-title">Build USSD menus without writing code.</h2>
-      <p class="section-sub">Design multi-level interactive menus for airtime top-ups, bill payments, account lookups, and more — all from a visual builder. Deploy to any Ghanaian shortcode.</p>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#5a6a80;">
-          <div style="width:5px;height:5px;border-radius:50%;background:#16B6A2;flex-shrink:0;"></div>
-          Sub-menus, payments, and message nodes
+      <p class="section-sub">Design multi-level interactive menus with payments built in. Three steps to go live on any shortcode.</p>
+
+      <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:28px;">
+        <div style="background:#0a0f1a;border:1px solid #1a2235;border-radius:12px;padding:16px 18px;">
+          <div style="font:600 11px 'IBM Plex Mono';color:#16B6A2;letter-spacing:.1em;margin-bottom:6px;">STEP 1 — ADD YOUR MERCHANT CREDENTIALS</div>
+          <div style="font-size:13.5px;color:#5a6a80;line-height:1.6;">Go to <span style="color:#c4c9d2;font-family:'IBM Plex Mono';font-size:12px;">Settings → Payment Integration</span> and enter your <span style="color:#c4c9d2;">Merchant ID</span> and <span style="color:#c4c9d2;">API Key</span> from your payment provider. These are used on all payment nodes in your menus.</div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#5a6a80;">
-          <div style="width:5px;height:5px;border-radius:50%;background:#16B6A2;flex-shrink:0;"></div>
-          Collect user input &amp; process payments inline
+        <div style="background:#0a0f1a;border:1px solid #1a2235;border-radius:12px;padding:16px 18px;">
+          <div style="font:600 11px 'IBM Plex Mono';color:#16B6A2;letter-spacing:.1em;margin-bottom:6px;">STEP 2 — BUILD YOUR MENU TREE</div>
+          <div style="font-size:13.5px;color:#5a6a80;line-height:1.6;">Add menu options and choose a node type for each: <span style="color:#c4c9d2;">message</span> (display text), <span style="color:#7aa2f7;">submenu</span> (nested options), or <span style="color:#f0883e;">payment</span> (collect amount + process via your merchant account). Payment nodes let you set a prompt, confirmation message, and success/failure responses.</div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#5a6a80;">
-          <div style="width:5px;height:5px;border-radius:50%;background:#16B6A2;flex-shrink:0;"></div>
-          Works on every handset — no internet needed
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#5a6a80;">
-          <div style="width:5px;height:5px;border-radius:50%;background:#16B6A2;flex-shrink:0;"></div>
-          Live preview before deployment
+        <div style="background:#0a0f1a;border:1px solid #1a2235;border-radius:12px;padding:16px 18px;">
+          <div style="font:600 11px 'IBM Plex Mono';color:#16B6A2;letter-spacing:.1em;margin-bottom:6px;">STEP 3 — DEPLOY TO YOUR SHORTCODE</div>
+          <div style="font-size:13.5px;color:#5a6a80;line-height:1.6;">Save your menu and click Deploy. The menu is immediately active on your registered shortcode — no code, no config files. Changes go live in seconds.</div>
         </div>
       </div>
     </div>
@@ -1111,102 +1099,6 @@
   </div>
 </section>
 
-<div class="section-divider"><hr></div>
-
-<!-- PRICING -->
-<section id="pricing">
-  <div style="text-align:center;margin-bottom:52px;">
-    <div class="section-eyebrow" style="text-align:center;">// PRICING</div>
-    <h2 class="section-title" style="max-width:none;text-align:center;">Pay for what you send.</h2>
-    <p style="font-size:16px;color:#4d5f78;margin-top:12px;">Top up once, send any time. No monthly fees, no expiry.</p>
-  </div>
-  <div class="pricing-grid">
-    <div class="pricing-card">
-      <div class="pricing-name">STARTER</div>
-      <div class="pricing-price">GHS <span>0.12</span></div>
-      <div class="pricing-period">per SMS · min. GHS 20 top-up</div>
-      <hr class="pricing-divider">
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Bulk SMS sending
-      </div>
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Contact management
-      </div>
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Delivery tracking
-      </div>
-      <div class="pricing-feature" style="color:#2d3f58;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        USSD Builder
-      </div>
-      <div class="pricing-feature" style="color:#2d3f58;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Custom Sender ID
-      </div>
-      <a href="/app/register" class="pricing-btn pricing-btn-outline">Get started free</a>
-    </div>
-
-    <div class="pricing-card featured">
-      <div class="pricing-popular">MOST POPULAR</div>
-      <div class="pricing-name">BUSINESS</div>
-      <div class="pricing-price">GHS <span>0.08</span></div>
-      <div class="pricing-period">per SMS · min. GHS 200 top-up</div>
-      <hr class="pricing-divider" style="border-color:rgba(22,182,162,.15);">
-      <div class="pricing-feature" style="color:#c4c9d2;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Everything in Starter
-      </div>
-      <div class="pricing-feature" style="color:#c4c9d2;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        USSD Builder
-      </div>
-      <div class="pricing-feature" style="color:#c4c9d2;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Custom Sender ID
-      </div>
-      <div class="pricing-feature" style="color:#c4c9d2;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Scheduled campaigns
-      </div>
-      <div class="pricing-feature" style="color:#c4c9d2;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Priority delivery routing
-      </div>
-      <a href="/app/register" class="pricing-btn pricing-btn-filled">Start sending now</a>
-    </div>
-
-    <div class="pricing-card">
-      <div class="pricing-name">ENTERPRISE</div>
-      <div class="pricing-price" style="font-size:28px;">Custom</div>
-      <div class="pricing-period">volume pricing · dedicated support</div>
-      <hr class="pricing-divider">
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Everything in Business
-      </div>
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Dedicated account manager
-      </div>
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        SLA uptime guarantee
-      </div>
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        API access &amp; webhooks
-      </div>
-      <div class="pricing-feature">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Custom USSD shortcode
-      </div>
-      <a href="mailto:hello@tunnelo.io" class="pricing-btn pricing-btn-outline">Contact sales</a>
-    </div>
-  </div>
-</section>
 
 <!-- CTA BANNER -->
 <div class="cta-banner">
