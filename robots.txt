@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tunnelo.github.io/sitemap.xml
+Sitemap: https://tunnelo.click/sitemap.xml
