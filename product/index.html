@@ -1093,9 +1093,9 @@
       <div class="footer-brand-text">Tunnelo<span> SU</span> <span style="color:#2d3f58;font-weight:400;">— SMS &amp; USSD Gateway</span></div>
     </div>
     <a href="mailto:hello@tunnelo.click" class="footer-copy" style="text-decoration:none;">hello@tunnelo.click</a>
-    <div class="footer-copy">&copy; 2026 Tunnelo. All rights reserved.</div>
+    <div class="footer-copy">&copy; <span id="copy-year"></span> Tunnelo. All rights reserved.</div>
   </div>
 </footer>
-
+<script>document.getElementById('copy-year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

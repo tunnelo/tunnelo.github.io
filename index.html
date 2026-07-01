@@ -677,7 +677,7 @@ a{color:inherit;text-decoration:none;}
       </div>
     </div>
     <div style="max-width:1240px;margin:0 auto;padding:18px 40px 30px;border-top:1px solid #14171c;display:flex;align-items:center;justify-content:space-between;">
-      <div style="font:500 12px 'IBM Plex Mono';color:#5f6671;">&#169; 2026 Tunnelo. All systems operational.</div>
+      <div style="font:500 12px 'IBM Plex Mono';color:#5f6671;">&#169; <span id="copy-year"></span> Tunnelo. All systems operational.</div>
       <div style="display:inline-flex;align-items:center;gap:8px;font:500 12px 'IBM Plex Mono';color:#5f6671;"><span style="width:7px;height:7px;border-radius:50%;background:#3fb950;box-shadow:0 0 8px #3fb950;"></span>Online</div>
     </div>
   </footer>
@@ -819,6 +819,7 @@ function submitContact(e) {
 }
 
 go('home');
+document.getElementById('copy-year').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
