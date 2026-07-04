@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docs — Tunnelo SU</title>
+  <meta name="description" content="Tunnelo SU documentation: contacts and database connections, sender ID and SMS sending, groups, USSD payment provider setup, USSD menu builder, and webhooks.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#070b12">
+  <link rel="canonical" href="https://tunnelo.click/product/docs.html">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Hanken Grotesk', sans-serif;
+      background: #070b12;
+      color: #eef0f3;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    code, .mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* NAV (shared with product landing) */
+    nav { position: sticky; top: 0; z-index: 50; background: #070b12; padding: 10px 40px; }
+    .nav-inner { max-width: 1020px; margin: 0 auto; background: #0e1626; border: 1px solid #1a2235; border-radius: 16px; padding: 0 20px; height: 68px; display: flex; align-items: center; gap: 24px; box-shadow: 0 4px 24px rgba(0,0,0,.5); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; cursor: pointer; }
+    .nav-logo-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nav-logo-text { font: 700 17px 'Space Grotesk'; letter-spacing: -.01em; color: #eef0f3; }
+    .nav-logo-text span { color: #16B6A2; }
+    .nav-links { display: flex; align-items: center; gap: 2px; margin-left: 8px; }
+    .nav-link { padding: 7px 13px; border-radius: 9px; font: 500 14px 'Hanken Grotesk'; color: #7e8fa8; cursor: pointer; transition: color .15s, background .15s; white-space: nowrap; }
+    .nav-link:hover, .nav-link.active { color: #fff; background: rgba(255,255,255,.06); }
+    .nav-cta { margin-left: auto; padding: 9px 18px; background: #16B6A2; color: #fff; border-radius: 10px; font: 600 14px 'Hanken Grotesk'; cursor: pointer; flex-shrink: 0; transition: background .15s; }
+    .nav-cta:hover { background: #12A594; }
+
+    @media (max-width: 860px) {
+      .nav-links { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; margin-left: 0; }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .nav-link { font-size: 12px; padding: 6px 9px; }
+    }
+
+    /* DOCS LAYOUT */
+    .docs-wrap { max-width: 1180px; margin: 0 auto; padding: 40px 40px 100px; display: grid; grid-template-columns: 240px 1fr; gap: 48px; align-items: start; }
+    .docs-side { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 2px; }
+    .docs-side-title { font: 600 11px 'IBM Plex Mono'; letter-spacing: .1em; color: #4d5f78; margin-bottom: 10px; }
+    .docs-side a { padding: 8px 12px; border-radius: 8px; font-size: 13.5px; color: #7e8fa8; transition: color .15s, background .15s; }
+    .docs-side a:hover { color: #eef0f3; background: rgba(255,255,255,.04); }
+    .docs-side a.active { color: #16B6A2; background: rgba(22,182,162,.08); }
+
+    .docs-main h1 { font: 700 34px 'Space Grotesk'; letter-spacing: -.01em; margin-bottom: 10px; }
+    .docs-main > p.lead { color: #7e8fa8; font-size: 15.5px; margin-bottom: 44px; max-width: 640px; }
+    .docs-section { margin-bottom: 56px; scroll-margin-top: 90px; }
+    .docs-section h2 { font: 700 22px 'Space Grotesk'; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .docs-section .section-num { font: 600 12px 'IBM Plex Mono'; color: #16B6A2; }
+    .docs-section .section-desc { color: #7e8fa8; font-size: 14.5px; margin-bottom: 20px; max-width: 620px; }
+    .docs-step { background: #0a0f1a; border: 1px solid #1a2235; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+    .docs-step-label { font: 600 11px 'IBM Plex Mono'; color: #16B6A2; letter-spacing: .08em; margin-bottom: 6px; }
+    .docs-step-body { font-size: 13.5px; color: #a9b4c4; line-height: 1.65; }
+    .docs-step-body b, .docs-step-body .k { color: #c4c9d2; }
+    .docs-step-body code { background: rgba(255,255,255,.05); padding: 2px 6px; border-radius: 5px; font-size: 12px; color: #7eeadb; }
+    pre.code-block { background: #0a0f1a; border: 1px solid #1a2235; border-radius: 12px; padding: 16px 18px; overflow-x: auto; font-size: 12.5px; color: #c4c9d2; margin: 14px 0; line-height: 1.7; }
+    pre.code-block .c1 { color: #4d5f78; }
+    pre.code-block .k1 { color: #7aa2f7; }
+    pre.code-block .s1 { color: #7eeadb; }
+    .docs-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+    .docs-table th, .docs-table td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #1a2235; }
+    .docs-table th { color: #7e8fa8; font: 600 11px 'IBM Plex Mono'; letter-spacing: .05em; }
+    .docs-table td { color: #a9b4c4; }
+    .docs-table code { background: rgba(255,255,255,.05); padding: 2px 6px; border-radius: 5px; font-size: 11.5px; color: #7eeadb; }
+    .callout { display: flex; gap: 10px; background: rgba(22,182,162,.06); border: 1px solid rgba(22,182,162,.15); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #a9b4c4; margin: 14px 0; }
+    .callout b { color: #16B6A2; }
+    .callout.warn { background: rgba(240,136,62,.06); border-color: rgba(240,136,62,.18); }
+    .callout.warn b { color: #f0883e; }
+
+    @media (max-width: 900px) {
+      .docs-wrap { grid-template-columns: 1fr; padding: 28px 20px 80px; }
+      .docs-side { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+      .docs-side-title { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/product/" class="nav-logo" style="display:flex;align-items:center;gap:10px;">
+      <div class="nav-logo-icon">
+        <svg width="34" height="34" viewBox="0 0 90 90" fill="none">
+          <defs>
+            <linearGradient id="navDocsLogoSq" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#16B6A2"/><stop offset="100%" stop-color="#0E8C7E"/></linearGradient>
+            <mask id="navDocsLogoCut"><rect width="90" height="90" rx="22" fill="#fff"/><path d="M30 90 V48 a15 15 0 0 1 30 0 V90 Z" fill="#000"/></mask>
+          </defs>
+          <rect width="90" height="90" rx="22" fill="url(#navDocsLogoSq)" mask="url(#navDocsLogoCut)"/>
+          <circle cx="45" cy="60" r="6.5" fill="#7eeadb"/>
+        </svg>
+      </div>
+      <div class="nav-logo-text">Tunnelo<span> SU</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/product/#features" class="nav-link">Features</a>
+      <a href="/product/#ussd" class="nav-link">USSD Builder</a>
+      <a href="/product/#how" class="nav-link">How it works</a>
+      <a href="/product/docs.html" class="nav-link active">Docs</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
+      <a href="/" style="font:500 13px 'Hanken Grotesk';color:#4d5f78;text-decoration:none;border:1px solid #1a2235;border-radius:8px;padding:6px 13px;transition:border-color .15s,color .15s;" onmouseover="this.style.borderColor='#2d3f58';this.style.color='#c4c9d2'" onmouseout="this.style.borderColor='#1a2235';this.style.color='#4d5f78'">tunnelo.click</a>
+      <a href="/app" class="nav-cta">Get started →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="docs-wrap">
+  <aside class="docs-side">
+    <div class="docs-side-title">ON THIS PAGE</div>
+    <a href="#contacts">Contacts &amp; database connections</a>
+    <a href="#sender-id">Sender ID &amp; sending SMS</a>
+    <a href="#groups">Groups &amp; table selection</a>
+    <a href="#ussd-payment">USSD payment provider</a>
+    <a href="#ussd-menu">USSD menu setup</a>
+    <a href="#webhooks">Webhooks</a>
+  </aside>
+
+  <main class="docs-main">
+    <h1>Documentation</h1>
+    <p class="lead">Everything needed to wire up contacts, send SMS under your own sender ID, connect a payment provider to your USSD menus, and receive delivery events on your own backend.</p>
+
+    <section class="docs-section" id="contacts">
+      <h2><span class="section-num">01</span> Contacts &amp; database connections</h2>
+      <p class="section-desc">Add recipients manually, import a CSV, or keep a live sync from your own database.</p>
+
+      <div class="docs-step">
+        <div class="docs-step-label">MANUAL / CSV</div>
+        <div class="docs-step-body">Go to <span class="k">Contacts → Add contact</span> to enter a single number, or <span class="k">Contacts → Import</span> to upload a CSV. Required columns: <code>phone</code>. Optional: <code>first_name</code>, <code>last_name</code>, and any custom field you want available as a merge tag in messages, e.g. <code>{{first_name}}</code>.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">CONNECT YOUR DATABASE</div>
+        <div class="docs-step-body">Go to <span class="k">Contacts → Data sources → Connect database</span>. Supported: <b>PostgreSQL</b>, <b>MySQL</b>. Enter a read-only connection URI and pick the table + column mapping — Tunnelo SU only ever runs <code>SELECT</code> against this connection, never writes to it.</div>
+        <pre class="code-block"><span class="c1">// Connection URI format</span>
+<span class="k1">postgres</span>://<span class="s1">readonly_user</span>:<span class="s1">password</span>@db.yourhost.com:5432/<span class="s1">yourdb</span>?sslmode=require</pre>
+        <div class="callout warn"><b>Note —</b> use a dedicated read-only DB user, not your app's main credentials. Tunnelo SU never needs write access to your database.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">SYNC BEHAVIOR</div>
+        <div class="docs-step-body">Once connected, pick a <span class="k">sync interval</span> (15 min – 24 hr) or trigger <span class="k">Sync now</span> manually. New rows matching your query become contacts automatically; removed rows are marked <code>inactive</code>, not deleted, so historical delivery logs stay intact.</div>
+      </div>
+    </section>
+
+    <section class="docs-section" id="sender-id">
+      <h2><span class="section-num">02</span> Sender ID &amp; sending SMS</h2>
+      <p class="section-desc">Register the name recipients see instead of a phone number, then send.</p>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 1 — SUBMIT YOUR SENDER ID</div>
+        <div class="docs-step-body">Go to <span class="k">Settings → Sender IDs → Request new</span>. Enter a name up to 11 alphanumeric characters (e.g. <code>YOURBRAND</code>) and a short reason for use. Submissions are reviewed by the network operators — approval typically takes <b>24–48 hours</b>. Status shows as <code>pending</code>, <code>approved</code>, or <code>rejected</code> on the same page.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 2 — COMPOSE &amp; SEND</div>
+        <div class="docs-step-body">From <span class="k">Send SMS</span>, choose recipients (single number, a group, or an uploaded CSV), pick an <b>approved</b> sender ID from the dropdown, and write your message. Choose <span class="k">Send now</span> or <span class="k">Schedule</span> for a future date/time.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">API SEND</div>
+        <div class="docs-step-body">Sending also works from your own backend using your API key from <span class="k">Settings → API Keys</span>.</div>
+        <pre class="code-block"><span class="c1">curl -X POST https://api.tunnelo.click/v1/sms/send \
+  -H</span> <span class="s1">"Authorization: Bearer YOUR_API_KEY"</span> \
+  <span class="c1">-H</span> <span class="s1">"Content-Type: application/json"</span> \
+  -d <span class="s1">'{
+    "sender_id": "YOURBRAND",
+    "to": ["+233201234567"],
+    "message": "Your order has shipped."
+  }'</span></pre>
+      </div>
+    </section>
+
+    <section class="docs-section" id="groups">
+      <h2><span class="section-num">03</span> Groups &amp; table selection</h2>
+      <p class="section-desc">Organize contacts into reusable lists for targeted sends.</p>
+
+      <div class="docs-step">
+        <div class="docs-step-label">CREATE A GROUP</div>
+        <div class="docs-step-body">Go to <span class="k">Contacts → Groups → New group</span>, name it, then add members from existing contacts, a fresh CSV upload, or a connected database table.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">SELECT A TABLE FOR A GROUP</div>
+        <div class="docs-step-body">With a database connected (see §01), open the group and choose <span class="k">Source → Database table</span>. Pick the table, then map its columns to <code>phone</code> and any merge-tag fields. You can add a <code>WHERE</code> filter so the group only includes rows matching a condition, e.g. <code>plan = 'active'</code>.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">USING GROUPS IN A SEND</div>
+        <div class="docs-step-body">In <span class="k">Send SMS</span>, select <span class="k">Recipients → Group</span> and pick one or more groups. Duplicate numbers across groups are sent to once per campaign.</div>
+      </div>
+    </section>
+
+    <section class="docs-section" id="ussd-payment">
+      <h2><span class="section-num">04</span> Connect your payment provider (USSD)</h2>
+      <p class="section-desc">Link a mobile money / payment provider so USSD payment nodes can collect money through your own merchant account.</p>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 1 — ADD MERCHANT CREDENTIALS</div>
+        <div class="docs-step-body">Go to <span class="k">Settings → Payment Integration</span> and enter your <span class="k">Merchant ID</span> and <span class="k">API Key</span> from your payment provider. These are used on every payment node across all your USSD menus.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 2 — CUSTOM API (BRING YOUR OWN PROVIDER)</div>
+        <div class="docs-step-body">If your provider isn't in the built-in list, choose <span class="k">Provider → Custom API</span> and supply your own charge endpoint plus the request/response field mapping so Tunnelo SU knows how to trigger a charge and read back status.</div>
+        <pre class="code-block"><span class="c1">// Custom provider config</span>
+{
+  <span class="k1">"charge_url"</span>: <span class="s1">"https://provider.example.com/charge"</span>,
+  <span class="k1">"auth_header"</span>: <span class="s1">"Authorization: Bearer {api_key}"</span>,
+  <span class="k1">"request_map"</span>: { <span class="k1">"amount"</span>: <span class="s1">"amount"</span>, <span class="k1">"phone"</span>: <span class="s1">"msisdn"</span> },
+  <span class="k1">"response_map"</span>: { <span class="k1">"status"</span>: <span class="s1">"result.status"</span>, <span class="k1">"reference"</span>: <span class="s1">"result.txnId"</span> }
+}</pre>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 3 — TEST THE CONNECTION</div>
+        <div class="docs-step-body">Click <span class="k">Test charge</span> to run a 1-unit test transaction against your own credentials before attaching the provider to a live payment node. A successful test shows <code>status: success</code> with a returned <code>reference</code>.</div>
+      </div>
+    </section>
+
+    <section class="docs-section" id="ussd-menu">
+      <h2><span class="section-num">05</span> Set up a USSD menu</h2>
+      <p class="section-desc">Build the menu tree visually, then deploy it to your shortcode.</p>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 1 — CREATE THE MENU</div>
+        <div class="docs-step-body">Go to <span class="k">USSD → New menu</span>, enter your registered <span class="k">shortcode</span> (e.g. <code>*789#</code>), and name the menu.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 2 — ADD NODES</div>
+        <div class="docs-step-body">Add options and pick a type for each: <code>message</code> (display text and end or return to the menu), <code>submenu</code> (opens a nested set of options), or <code>payment</code> (collects an amount and charges it via the provider from §04 — set a prompt, confirmation text, and success/failure responses).</div>
+        <table class="docs-table">
+          <tr><th>Node type</th><th>Purpose</th></tr>
+          <tr><td><code>message</code></td><td>Show static or dynamic text, then exit or return up a level</td></tr>
+          <tr><td><code>submenu</code></td><td>Nest further numbered options under this one</td></tr>
+          <tr><td><code>payment</code></td><td>Prompt for/collect an amount, charge via your merchant account</td></tr>
+        </table>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 3 — DEPLOY</div>
+        <div class="docs-step-body">Click <span class="k">Save</span>, then <span class="k">Deploy</span>. The menu goes live on your shortcode immediately — no code, no config files, no redeploy delay.</div>
+      </div>
+    </section>
+
+    <section class="docs-section" id="webhooks">
+      <h2><span class="section-num">06</span> Set up webhooks</h2>
+      <p class="section-desc">Receive delivery status and USSD payment events on your own endpoint in real time.</p>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 1 — REGISTER AN ENDPOINT</div>
+        <div class="docs-step-body">Go to <span class="k">Settings → Webhooks → Add endpoint</span>, enter a public HTTPS URL, and choose which events to receive: <code>sms.delivered</code>, <code>sms.failed</code>, <code>ussd.payment.success</code>, <code>ussd.payment.failed</code>.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 2 — VERIFY THE SIGNATURE</div>
+        <div class="docs-step-body">Every request includes an <code>X-Tunnelo-Signature</code> header — an HMAC-SHA256 of the raw request body using the <span class="k">signing secret</span> shown on the endpoint's settings page. Reject any request whose computed signature doesn't match.</div>
+        <pre class="code-block"><span class="c1">// Example payload — sms.delivered</span>
+{
+  <span class="k1">"event"</span>: <span class="s1">"sms.delivered"</span>,
+  <span class="k1">"message_id"</span>: <span class="s1">"msg_8f2a1c"</span>,
+  <span class="k1">"to"</span>: <span class="s1">"+233201234567"</span>,
+  <span class="k1">"status"</span>: <span class="s1">"delivered"</span>,
+  <span class="k1">"timestamp"</span>: <span class="s1">"2026-07-03T22:10:04Z"</span>
+}</pre>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 3 — RESPOND CORRECTLY</div>
+        <div class="docs-step-body">Return a <code>2xx</code> status within 5 seconds to acknowledge receipt. Non-2xx or timeouts are retried with backoff up to 5 times; after that the event is marked <code>undelivered</code> in <span class="k">Settings → Webhooks → Logs</span>, where you can inspect and manually replay it.</div>
+        <div class="callout"><b>Tip —</b> keep the handler fast and idempotent (use <code>message_id</code> / <code>reference</code> to dedupe) since retries can deliver the same event more than once.</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+</body>
+</html>
