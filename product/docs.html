@@ -139,10 +139,17 @@
 
       <div class="docs-step">
         <div class="docs-step-label">CONNECT YOUR DATABASE</div>
-        <div class="docs-step-body">Go to <span class="k">Contacts → Data sources → Connect database</span>. Supported: <b>PostgreSQL</b>, <b>MySQL</b>. Enter a read-only connection URI and pick the table + column mapping — Tunnelo SU only ever runs <code>SELECT</code> against this connection, never writes to it.</div>
-        <pre class="code-block"><span class="c1">// Connection URI format</span>
-<span class="k1">postgres</span>://<span class="s1">readonly_user</span>:<span class="s1">password</span>@db.yourhost.com:5432/<span class="s1">yourdb</span>?sslmode=require</pre>
-        <div class="callout warn"><b>Note —</b> use a dedicated read-only DB user, not your app's main credentials. Tunnelo SU never needs write access to your database.</div>
+        <div class="docs-step-body">Go to <span class="k">Contacts → Data sources → Connect database</span>. Supported: <b>PostgreSQL</b>, <b>MySQL</b>, <b>MongoDB</b>, <b>Supabase</b>. Enter a read-only connection URI (Mongo: connection string, Supabase: project URL + service key restricted to read) and pick the table/collection + field mapping — Tunnelo SU only ever runs read queries against this connection, never writes to it.</div>
+        <pre class="code-block"><span class="c1">// PostgreSQL / Supabase (Postgres) connection URI</span>
+<span class="k1">postgres</span>://<span class="s1">readonly_user</span>:<span class="s1">password</span>@db.yourhost.com:5432/<span class="s1">yourdb</span>?sslmode=require
+
+<span class="c1">// MongoDB connection URI</span>
+<span class="k1">mongodb+srv</span>://<span class="s1">readonly_user</span>:<span class="s1">password</span>@cluster0.mongodb.net/<span class="s1">yourdb</span>?retryWrites=false
+
+<span class="c1">// Supabase (project API instead of direct Postgres)</span>
+<span class="k1">project_url</span>: <span class="s1">"https://xyzcompany.supabase.co"</span>
+<span class="k1">api_key</span>: <span class="s1">"YOUR_SERVICE_ROLE_KEY_READ_ONLY"</span></pre>
+        <div class="callout warn"><b>Note —</b> use a dedicated read-only DB user or a Supabase key scoped to read-only, not your app's main credentials/service role key. Tunnelo SU never needs write access to your database.</div>
       </div>
 
       <div class="docs-step">
@@ -218,6 +225,12 @@
   <span class="k1">"request_map"</span>: { <span class="k1">"amount"</span>: <span class="s1">"amount"</span>, <span class="k1">"phone"</span>: <span class="s1">"msisdn"</span> },
   <span class="k1">"response_map"</span>: { <span class="k1">"status"</span>: <span class="s1">"result.status"</span>, <span class="k1">"reference"</span>: <span class="s1">"result.txnId"</span> }
 }</pre>
+        <div class="docs-step-body" style="margin-top:12px;">On save, Tunnelo SU generates a <span class="k">signing key</span> for this custom provider (<span class="k">Provider → Custom API → Signing key</span>). Every charge request we send to your <code>charge_url</code> includes it in an <code>X-Tunnelo-Signature</code> header — an HMAC-SHA256 of the raw request body using that key. Verify it on your endpoint before processing the charge, so nobody else can call your charge URL and impersonate Tunnelo SU.</div>
+        <pre class="code-block"><span class="c1">// Incoming charge request headers</span>
+POST /charge HTTP/1.1
+<span class="k1">X-Tunnelo-Signature</span>: <span class="s1">5f8a...c21</span>  <span class="c1">// HMAC-SHA256(body, signing_key)</span>
+<span class="k1">Content-Type</span>: application/json</pre>
+        <div class="callout warn"><b>Note —</b> keep the signing key on your server only. Rotate it any time from the same settings page if you suspect it leaked.</div>
       </div>
 
       <div class="docs-step">
