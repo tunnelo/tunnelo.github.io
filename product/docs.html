@@ -34,16 +34,23 @@
     .nav-logo-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .nav-logo-text { font: 700 17px 'Space Grotesk'; letter-spacing: -.01em; color: #eef0f3; }
     .nav-logo-text span { color: #16B6A2; }
-    .nav-links { display: flex; align-items: center; gap: 2px; margin-left: 8px; }
-    .nav-link { padding: 7px 13px; border-radius: 9px; font: 500 14px 'Hanken Grotesk'; color: #7e8fa8; cursor: pointer; transition: color .15s, background .15s; white-space: nowrap; }
+    .nav-links { display: flex; align-items: center; gap: 2px; margin-left: 8px; min-width: 0; flex: 1 1 auto; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-link { padding: 7px 13px; border-radius: 9px; font: 500 14px 'Hanken Grotesk'; color: #7e8fa8; cursor: pointer; transition: color .15s, background .15s; white-space: nowrap; flex-shrink: 0; }
     .nav-link:hover, .nav-link.active { color: #fff; background: rgba(255,255,255,.06); }
-    .nav-cta { margin-left: auto; padding: 9px 18px; background: #16B6A2; color: #fff; border-radius: 10px; font: 600 14px 'Hanken Grotesk'; cursor: pointer; flex-shrink: 0; transition: background .15s; }
+    .nav-cta { padding: 9px 18px; background: #16B6A2; color: #fff; border-radius: 10px; font: 600 14px 'Hanken Grotesk'; cursor: pointer; flex-shrink: 0; transition: background .15s; white-space: nowrap; }
     .nav-cta:hover { background: #12A594; }
+    .nav-inner > div[style*="margin-left:auto"] { flex-shrink: 0; }
 
     @media (max-width: 860px) {
-      .nav-links { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; margin-left: 0; }
-      .nav-links::-webkit-scrollbar { display: none; }
       .nav-link { font-size: 12px; padding: 6px 9px; }
+    }
+
+    @media (max-width: 560px) {
+      nav { padding: 10px 12px; }
+      .nav-inner { padding: 0 12px; gap: 10px; }
+      .nav-logo-text { font-size: 15px; }
+      .nav-inner a[href="/"] { display: none; }
     }
 
     /* DOCS LAYOUT */
@@ -57,9 +64,10 @@
     .docs-main h1 { font: 700 34px 'Space Grotesk'; letter-spacing: -.01em; margin-bottom: 10px; }
     .docs-main > p.lead { color: #7e8fa8; font-size: 15.5px; margin-bottom: 44px; max-width: 640px; }
     .docs-section { margin-bottom: 56px; scroll-margin-top: 90px; }
-    .docs-section h2 { font: 700 22px 'Space Grotesk'; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .docs-section h2 { font: 700 22px 'Space Grotesk'; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .docs-section .section-num { font: 600 12px 'IBM Plex Mono'; color: #16B6A2; }
     .docs-section .section-desc { color: #7e8fa8; font-size: 14.5px; margin-bottom: 20px; max-width: 620px; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .docs-step { background: #0a0f1a; border: 1px solid #1a2235; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
     .docs-step-label { font: 600 11px 'IBM Plex Mono'; color: #16B6A2; letter-spacing: .08em; margin-bottom: 6px; }
     .docs-step-body { font-size: 13.5px; color: #a9b4c4; line-height: 1.65; }
@@ -80,9 +88,13 @@
     .callout.warn b { color: #f0883e; }
 
     @media (max-width: 900px) {
-      .docs-wrap { grid-template-columns: 1fr; padding: 28px 20px 80px; }
-      .docs-side { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+      .docs-wrap { grid-template-columns: 1fr; padding: 28px 20px 80px; gap: 28px; }
+      .docs-side { position: static; flex-direction: row; flex-wrap: wrap; gap: 8px; }
       .docs-side-title { display: none; }
+      .docs-side a { background: #0e1626; border: 1px solid #1a2235; font-size: 12.5px; padding: 7px 11px; }
+      .docs-main h1 { font-size: 26px; }
+      .docs-step { padding: 14px 15px; }
+      pre.code-block { padding: 12px 14px; font-size: 11.5px; }
     }
   </style>
 </head>
@@ -254,12 +266,14 @@ POST /charge HTTP/1.1
       <div class="docs-step">
         <div class="docs-step-label">STEP 2 — ADD NODES</div>
         <div class="docs-step-body">Add options and pick a type for each: <code>message</code> (display text and end or return to the menu), <code>submenu</code> (opens a nested set of options), or <code>payment</code> (collects an amount and charges it via the provider from §04 — set a prompt, confirmation text, and success/failure responses).</div>
+        <div class="table-scroll">
         <table class="docs-table">
           <tr><th>Node type</th><th>Purpose</th></tr>
           <tr><td><code>message</code></td><td>Show static or dynamic text, then exit or return up a level</td></tr>
           <tr><td><code>submenu</code></td><td>Nest further numbered options under this one</td></tr>
           <tr><td><code>payment</code></td><td>Prompt for/collect an amount, charge via your merchant account</td></tr>
         </table>
+        </div>
       </div>
 
       <div class="docs-step">
