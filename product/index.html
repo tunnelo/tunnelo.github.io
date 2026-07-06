@@ -487,6 +487,13 @@
       border-color: rgba(22,182,162,.25);
     }
 
+    /* SERVICES GRID */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
     /* USSD SECTION */
     .ussd-section {
       display: grid;
@@ -673,6 +680,7 @@
       .section-title { font-size: 32px; }
       .features-grid { grid-template-columns: 1fr; }
       .feature-card.wide { grid-column: span 1; }
+      .services-grid { grid-template-columns: 1fr; }
       .ussd-section { grid-template-columns: 1fr; gap: 32px; }
       .steps-grid { grid-template-columns: 1fr; gap: 28px; }
 .cta-inner { padding: 40px 24px; }
@@ -700,6 +708,7 @@
       <div class="nav-logo-text">Tunnelo<span> SU</span></div>
     </div>
     <div class="nav-links">
+      <a href="#services" class="nav-link">Services</a>
       <a href="#features" class="nav-link">Features</a>
       <a href="#ussd" class="nav-link">USSD Builder</a>
       <a href="#how" class="nav-link">How it works</a>
@@ -843,6 +852,56 @@
     </div>
   </div>
 </div>
+
+<div class="section-divider"><hr></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-eyebrow">// OUR SERVICES</div>
+  <h2 class="section-title">Four ways to reach and collect from customers.</h2>
+  <p class="section-sub">Built on the same USSD and SMS infrastructure — pick the service that fits, or run all four.</p>
+  <div class="services-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16B6A2" stroke-width="1.8" stroke-linecap="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+        </svg>
+      </div>
+      <div class="feature-title">VPOS</div>
+      <div class="feature-desc">USSD system for payment by customers. Dial a shortcode, pay via mobile money — no app, no internet needed.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16B6A2" stroke-width="1.8" stroke-linecap="round">
+          <path d="M9 12l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/>
+        </svg>
+      </div>
+      <div class="feature-title">eBalloting</div>
+      <div class="feature-desc">USSD voting system. Run polls and elections by shortcode, with results tallied and tracked in real time.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16B6A2" stroke-width="1.8" stroke-linecap="round">
+          <path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8z"/><path d="M13 6v2M13 12v2M13 16v2"/>
+        </svg>
+      </div>
+      <div class="feature-title">eTicketing</div>
+      <div class="feature-desc">USSD system for ticket purchase. Customers buy event, transport, or entry tickets by dialing a shortcode.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16B6A2" stroke-width="1.8" stroke-linecap="round">
+          <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+        </svg>
+      </div>
+      <div class="feature-title">SMS Gateway</div>
+      <div class="feature-desc">Bulk SMS delivery with sender ID, scheduling, and real-time delivery tracking across all major networks.</div>
+    </div>
+  </div>
+</section>
 
 <div class="section-divider"><hr></div>
 
