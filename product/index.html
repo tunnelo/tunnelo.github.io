@@ -248,16 +248,16 @@
       width: 210px;
       flex-shrink: 0;
       background: #0E1626;
-      padding: 18px 14px;
+      padding: 16px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
     .preview-logo-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 6px 20px;
+      padding: 4px 6px 14px;
     }
     .preview-logo-icon {
       width: 28px;
@@ -275,9 +275,9 @@
       display: flex;
       align-items: center;
       gap: 9px;
-      padding: 8px 10px;
+      padding: 6.5px 10px;
       border-radius: 8px;
-      font: 500 12.5px 'Hanken Grotesk';
+      font: 500 12px 'Hanken Grotesk';
       color: #6B7894;
       cursor: pointer;
     }
@@ -359,7 +359,8 @@
     }
     .preview-table-head {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 0.9fr 1.8fr 0.7fr 0.9fr 1fr 0.7fr;
+      gap: 6px;
       padding: 10px 14px;
       border-bottom: 1px solid #EAECF0;
       font: 500 10.5px 'IBM Plex Mono';
@@ -368,7 +369,8 @@
     }
     .preview-table-row {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 0.9fr 1.8fr 0.7fr 0.9fr 1fr 0.7fr;
+      gap: 6px;
       padding: 9px 14px;
       border-bottom: 1px solid #F2F4F7;
       font-size: 11.5px;
@@ -387,6 +389,22 @@
     .badge-sent { background: #E7F6EE; color: #0E7C4A; }
     .badge-pending { background: #FBF3D9; color: #9A6700; }
     .badge-scheduled { background: #EFF8FF; color: #1849A9; }
+    .preview-row2 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .preview-chart-card, .preview-summary-card { background: #fff; border: 1px solid #EAECF0; border-radius: 12px; padding: 16px; }
+    .preview-chart-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .preview-chart-title { font: 700 13px 'Hanken Grotesk'; color: #101828; }
+    .preview-chart-sub { font-size: 11px; color: #667085; }
+    .preview-bars { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
+    .preview-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; justify-content: flex-end; }
+    .preview-bar-track { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+    .preview-bar-fill { width: 100%; border-radius: 4px 4px 1px 1px; background: linear-gradient(180deg,#16B6A2,#0E8C7E); }
+    .preview-bar-fill.empty { background: #F2F4F7; height: 4% !important; }
+    .preview-bar-label { font-size: 9.5px; color: #667085; font-weight: 500; }
+    .preview-summary-title { font: 700 13px 'Hanken Grotesk'; color: #101828; margin-bottom: 10px; }
+    .preview-summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid #F2F4F7; }
+    .preview-summary-row:first-of-type { border-top: none; }
+    .preview-summary-label { font-size: 11px; color: #667085; }
+    .preview-summary-val { font: 600 12px 'IBM Plex Mono'; color: #101828; }
 
     /* STATS BAR */
     .stats-bar {
@@ -672,8 +690,11 @@
       .preview-wrap { padding: 0 20px; }
       .preview-sidebar { display: none; }
       .preview-stats { grid-template-columns: repeat(2,1fr); }
-      .preview-table-head, .preview-table-row { grid-template-columns: 2fr 1fr 1fr; }
-      .preview-table-head span:last-child, .preview-table-row span:last-child { display: none; }
+      .preview-row2 { grid-template-columns: 1fr; }
+      .preview-table-head, .preview-table-row { grid-template-columns: 0.9fr 1.6fr 0.9fr; }
+      .preview-table-head span:nth-child(3), .preview-table-row span:nth-child(3),
+      .preview-table-head span:nth-child(5), .preview-table-row span:nth-child(5),
+      .preview-table-head span:nth-child(6), .preview-table-row span:nth-child(6) { display: none; }
       .stats-bar { padding: 0 20px 50px; }
       .stats-grid { grid-template-columns: repeat(2,1fr); }
       section { padding: 50px 20px; }
@@ -759,24 +780,29 @@
         <div class="preview-nav-item active"><div class="preview-nav-dot"></div>Dashboard</div>
         <div class="preview-nav-item"><div class="preview-nav-dot"></div>Send SMS</div>
         <div class="preview-nav-item"><div class="preview-nav-dot"></div>Contacts</div>
-        <div class="preview-nav-item"><div class="preview-nav-dot"></div>Delivery Logs</div>
-        <div class="preview-nav-item"><div class="preview-nav-dot"></div>USSD Builder</div>
+        <div class="preview-nav-item"><div class="preview-nav-dot"></div>Delivery logs</div>
+        <div class="preview-nav-item"><div class="preview-nav-dot"></div>USSD builder</div>
+        <div class="preview-nav-item"><div class="preview-nav-dot"></div>Webhooks</div>
         <div class="preview-nav-item"><div class="preview-nav-dot"></div>Payments</div>
+        <div class="preview-nav-item"><div class="preview-nav-dot"></div>Settings</div>
         <div class="preview-wallet">
-          <div class="preview-wallet-label">SMS credit</div>
-          <div class="preview-wallet-val">1,240 SMS</div>
-          <div class="preview-wallet-btn">Top up</div>
+          <div class="preview-wallet-label">SMS credits</div>
+          <div class="preview-wallet-val">1,240</div>
+          <div class="preview-wallet-btn">Top up wallet</div>
         </div>
       </div>
       <div class="preview-main">
         <div class="preview-header">
           <div>
             <div class="preview-header-title">Dashboard</div>
-            <div class="preview-header-sub">Overview for June 2026</div>
+            <div class="preview-header-sub">Overview of your messaging activity</div>
           </div>
-          <div class="preview-header-btn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-            New message
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:#F6F7F9;border:1px solid #EAECF0;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#12A594;display:inline-block;"></span>
+              <span style="font:600 11.5px 'IBM Plex Mono';color:#101828;">1,240 SMS</span>
+            </div>
+            <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#16B6A2,#0E8C7E);display:flex;align-items:center;justify-content:center;color:#fff;font:700 12px 'Hanken Grotesk';flex-shrink:0;">T</div>
           </div>
         </div>
         <div class="preview-content">
@@ -784,7 +810,7 @@
             <div class="preview-stat">
               <div class="preview-stat-label">Messages sent</div>
               <div class="preview-stat-val">18,420</div>
-              <div class="preview-stat-trend">↑ 12.4% vs last month</div>
+              <div class="preview-stat-trend" style="color:#667085;">This month</div>
             </div>
             <div class="preview-stat">
               <div class="preview-stat-label">Delivery rate</div>
@@ -794,35 +820,75 @@
             <div class="preview-stat">
               <div class="preview-stat-label">Active contacts</div>
               <div class="preview-stat-val">1,284</div>
-              <div class="preview-stat-trend">↑ 48 this week</div>
+              <div class="preview-stat-trend" style="color:#667085;">In your contact list</div>
             </div>
             <div class="preview-stat dark">
-              <div class="preview-stat-label">SMS credit</div>
+              <div class="preview-stat-label">SMS credits</div>
               <div class="preview-stat-val">1,240</div>
               <div style="font-size:11px;color:#16B6A2;font-weight:600;margin-top:4px;cursor:pointer;">Top up →</div>
             </div>
           </div>
+
+          <div class="preview-row2">
+            <div class="preview-chart-card">
+              <div class="preview-chart-head">
+                <div class="preview-chart-title">Messages this week</div>
+                <div class="preview-chart-sub">Last 7 days</div>
+              </div>
+              <div class="preview-bars">
+                <div class="preview-bar-col"><div class="preview-bar-track"><div class="preview-bar-fill" style="height:35%;"></div></div><div class="preview-bar-label">Sun</div></div>
+                <div class="preview-bar-col"><div class="preview-bar-track"><div class="preview-bar-fill" style="height:60%;"></div></div><div class="preview-bar-label">Mon</div></div>
+                <div class="preview-bar-col"><div class="preview-bar-track"><div class="preview-bar-fill" style="height:82%;"></div></div><div class="preview-bar-label">Tue</div></div>
+                <div class="preview-bar-col"><div class="preview-bar-track"><div class="preview-bar-fill" style="height:48%;"></div></div><div class="preview-bar-label">Wed</div></div>
+                <div class="preview-bar-col"><div class="preview-bar-track"><div class="preview-bar-fill" style="height:100%;"></div></div><div class="preview-bar-label">Thu</div></div>
+                <div class="preview-bar-col"><div class="preview-bar-track"><div class="preview-bar-fill" style="height:70%;"></div></div><div class="preview-bar-label">Fri</div></div>
+                <div class="preview-bar-col"><div class="preview-bar-track"><div class="preview-bar-fill empty"></div></div><div class="preview-bar-label">Sat</div></div>
+              </div>
+            </div>
+            <div class="preview-summary-card">
+              <div class="preview-summary-title">Summary</div>
+              <div class="preview-summary-row">
+                <span class="preview-summary-label">Total campaigns</span>
+                <span class="preview-summary-val">312 messages</span>
+              </div>
+              <div class="preview-summary-row">
+                <span class="preview-summary-label">SMS remaining</span>
+                <span class="preview-summary-val">1,240 SMS</span>
+              </div>
+              <div class="preview-summary-row" style="border-top:1px solid #F2F4F7;margin-top:2px;">
+                <span class="preview-summary-label">Cost per SMS</span>
+                <span class="preview-summary-val" style="color:#12A594;font-size:14px;">₵0.04</span>
+              </div>
+            </div>
+          </div>
+
           <div class="preview-table">
             <div class="preview-table-head">
-              <span>RECIPIENT</span><span>STATUS</span><span>SENT</span><span>SENDER</span>
+              <span>SENDER ID</span><span>MESSAGE</span><span>RECIPIENTS</span><span>STATUS</span><span>DATE</span><span style="text-align:right;">COST</span>
             </div>
             <div class="preview-table-row">
-              <span style="font-weight:500;">233 55 132 6529</span>
+              <span style="font-family:'IBM Plex Mono';font-weight:600;font-size:10.5px;">BRIGHT-GH</span>
+              <span style="color:#475467;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Your order has shipped.</span>
+              <span style="font-family:'IBM Plex Mono';font-size:10.5px;">2,140</span>
               <span><div class="preview-badge badge-sent">● Sent</div></span>
-              <span style="color:#98A2B3;">2 min ago</span>
-              <span style="font-family:'IBM Plex Mono';font-size:10.5px;">BRIGHT-GH</span>
+              <span style="color:#98A2B3;">3 Jul, 09:12</span>
+              <span style="font-family:'IBM Plex Mono';font-size:10.5px;text-align:right;">₵85.60</span>
             </div>
             <div class="preview-table-row">
-              <span style="font-weight:500;">233 24 456 7890</span>
+              <span style="font-family:'IBM Plex Mono';font-weight:600;font-size:10.5px;">BRIGHT-GH</span>
+              <span style="color:#475467;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Reminder: payment due Friday.</span>
+              <span style="font-family:'IBM Plex Mono';font-size:10.5px;">640</span>
               <span><div class="preview-badge badge-pending">● Pending</div></span>
-              <span style="color:#98A2B3;">5 min ago</span>
-              <span style="font-family:'IBM Plex Mono';font-size:10.5px;">BRIGHT-GH</span>
+              <span style="color:#98A2B3;">2 Jul, 16:40</span>
+              <span style="font-family:'IBM Plex Mono';font-size:10.5px;text-align:right;">₵25.60</span>
             </div>
             <div class="preview-table-row">
-              <span style="font-weight:500;">233 50 987 6543</span>
+              <span style="font-family:'IBM Plex Mono';font-weight:600;font-size:10.5px;">BRIGHT-GH</span>
+              <span style="color:#475467;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Weekend promo — 20% off.</span>
+              <span style="font-family:'IBM Plex Mono';font-size:10.5px;">1,020</span>
               <span><div class="preview-badge badge-scheduled">● Scheduled</div></span>
-              <span style="color:#98A2B3;">Jun 30, 09:00</span>
-              <span style="font-family:'IBM Plex Mono';font-size:10.5px;">BRIGHT-GH</span>
+              <span style="color:#98A2B3;">5 Jul, 09:00</span>
+              <span style="font-family:'IBM Plex Mono';font-size:10.5px;text-align:right;">₵40.80</span>
             </div>
           </div>
         </div>

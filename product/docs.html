@@ -147,7 +147,7 @@
 
   <main class="docs-main">
     <h1>Documentation</h1>
-    <p class="lead">Everything needed to wire up contacts, send SMS under your own sender ID, connect a payment provider to your USSD menus, and receive delivery events on your own backend.</p>
+    <p class="lead">Everything needed to wire up contacts, send SMS under your own Hubtel sender ID, connect a payment provider to your USSD menus, and trigger SMS sends from your own backend.</p>
 
     <section class="docs-section" id="services">
       <h2><span class="section-num">00</span> Our services</h2>
@@ -155,10 +155,10 @@
       <div class="table-scroll">
       <table class="docs-table">
         <tr><th>Service</th><th>Purpose</th></tr>
-        <tr><td><b>VPOS</b></td><td>USSD system for payment by customers</td></tr>
-        <tr><td><b>eBalloting</b></td><td>USSD voting system</td></tr>
-        <tr><td><b>eTicketing</b></td><td>USSD system for ticket purchase</td></tr>
-        <tr><td><b>SMS Gateway</b></td><td>Bulk SMS sending with sender ID and delivery tracking</td></tr>
+        <tr><td><b>SMS Gateway</b></td><td>Bulk SMS sending under your own Hubtel sender ID, with delivery tracking</td></tr>
+        <tr><td><b>USSD Menu Builder</b></td><td>Build interactive USSD menus and deploy them to your shortcode</td></tr>
+        <tr><td><b>USSD Payment Collection</b></td><td>Collect money on a USSD menu via ExpressPay, Hubtel, or your own payment API</td></tr>
+        <tr><td><b>Contact Database Sync</b></td><td>Live read-only sync of contacts from your own Postgres, MySQL, MongoDB, or Supabase database</td></tr>
       </table>
       </div>
     </section>
@@ -168,28 +168,28 @@
       <p class="section-desc">Add recipients manually, import a CSV, or keep a live sync from your own database.</p>
 
       <div class="docs-step">
-        <div class="docs-step-label">MANUAL / CSV</div>
-        <div class="docs-step-body">Go to <span class="k">Contacts → Add contact</span> to enter a single number, or <span class="k">Contacts → Import</span> to upload a CSV. Required columns: <code>phone</code>. Optional: <code>first_name</code>, <code>last_name</code>, and any custom field you want available as a merge tag in messages, e.g. <code>{{first_name}}</code>.</div>
+        <div class="docs-step-label">MANUAL / CSV / EXCEL</div>
+        <div class="docs-step-body">Go to <span class="k">Contacts → Add contact</span> to enter a single number, or <span class="k">Contacts → Import</span> to upload a CSV or Excel file. A phone column is required — named <code>phone</code>, <code>mobile</code>, <code>number</code>, or <code>msisdn</code> — and is auto-detected. A name column (<code>name</code>, <code>contact</code>, <code>person</code>, <code>first name</code>, <code>full name</code>) is optional. No other custom fields are stored, and there's no merge-tag support in messages today.</div>
       </div>
 
       <div class="docs-step">
         <div class="docs-step-label">CONNECT YOUR DATABASE</div>
-        <div class="docs-step-body">Go to <span class="k">Contacts → Data sources → Connect database</span>. Supported: <b>PostgreSQL</b>, <b>MySQL</b>, <b>MongoDB</b>, <b>Supabase</b>. Enter a read-only connection URI (Mongo: connection string, Supabase: project URL + service key restricted to read) and pick the table/collection + field mapping — Tunnelo SU only ever runs read queries against this connection, never writes to it.</div>
-        <pre class="code-block"><span class="c1">// PostgreSQL / Supabase (Postgres) connection URI</span>
+        <div class="docs-step-body">Go to <span class="k">Contacts → Connect database</span>. Supported: <b>PostgreSQL</b>, <b>MySQL</b>, <b>MongoDB</b>, <b>Supabase</b>. Enter a read-only connection (Mongo: connection string, Supabase: project URL + key) and pick a table or collection — Tunnelo SU only ever runs read queries against it, never writes. The table must have a <code>phone</code>/<code>mobile</code> column (auto-detected by name, no manual field mapping), and is capped at 10,000 rows — export a smaller or filtered subset first if yours is bigger.</div>
+        <pre class="code-block"><span class="c1">// PostgreSQL connection</span>
 <span class="k1">postgres</span>://<span class="s1">readonly_user</span>:<span class="s1">password</span>@db.yourhost.com:5432/<span class="s1">yourdb</span>?sslmode=require
 
 <span class="c1">// MongoDB connection URI</span>
-<span class="k1">mongodb+srv</span>://<span class="s1">readonly_user</span>:<span class="s1">password</span>@cluster0.mongodb.net/<span class="s1">yourdb</span>?retryWrites=false
+<span class="k1">mongodb+srv</span>://<span class="s1">readonly_user</span>:<span class="s1">password</span>@cluster0.mongodb.net/<span class="s1">yourdb</span>
 
 <span class="c1">// Supabase (project API instead of direct Postgres)</span>
 <span class="k1">project_url</span>: <span class="s1">"https://xyzcompany.supabase.co"</span>
-<span class="k1">api_key</span>: <span class="s1">"YOUR_SERVICE_ROLE_KEY_READ_ONLY"</span></pre>
-        <div class="callout warn"><b>Note —</b> use a dedicated read-only DB user or a Supabase key scoped to read-only, not your app's main credentials/service role key. Tunnelo SU never needs write access to your database.</div>
+<span class="k1">api_key</span>: <span class="s1">"YOUR_SUPABASE_KEY"</span></pre>
+        <div class="callout warn"><b>Note —</b> use a dedicated read-only DB user, not your app's main credentials. Tunnelo SU never needs write access to your database.</div>
       </div>
 
       <div class="docs-step">
         <div class="docs-step-label">SYNC BEHAVIOR</div>
-        <div class="docs-step-body">Once connected, pick a <span class="k">sync interval</span> (15 min – 24 hr) or trigger <span class="k">Sync now</span> manually. New rows matching your query become contacts automatically; removed rows are marked <code>inactive</code>, not deleted, so historical delivery logs stay intact.</div>
+        <div class="docs-step-body">Once connected, an automatic re-sync runs every <b>6 hours</b>, or trigger <span class="k">Sync now</span> manually. Matching is by phone number: a new number becomes a contact, an existing one gets its name refreshed. Sync never deletes or deactivates a contact, even if its row later disappears from your source table — and synced contacts land with no group assigned, so add them to a group afterward (see §03) or target them directly with a webhook (see §06).</div>
       </div>
     </section>
 
@@ -198,26 +198,13 @@
       <p class="section-desc">Register the name recipients see instead of a phone number, then send.</p>
 
       <div class="docs-step">
-        <div class="docs-step-label">STEP 1 — SUBMIT YOUR SENDER ID</div>
-        <div class="docs-step-body">Go to <span class="k">Settings → Sender IDs → Request new</span>. Enter a name up to 11 alphanumeric characters (e.g. <code>YOURBRAND</code>) and a short reason for use. Submissions are reviewed by the network operators — approval typically takes <b>24–48 hours</b>. Status shows as <code>pending</code>, <code>approved</code>, or <code>rejected</code> on the same page.</div>
+        <div class="docs-step-label">STEP 1 — ADD YOUR SMS PROVIDER</div>
+        <div class="docs-step-body">Go to <span class="k">Settings → SMS provider</span>. SMS sends through your own <b>Hubtel</b> business account, so enter the Sender ID already approved on that account (up to 11 characters, e.g. <code>YOURBRAND</code>) along with your Hubtel <b>Client ID</b> and <b>Client Secret</b>. There's no separate approval step on Tunnelo SU's side — credit and sender ID stay tied to your own Hubtel account, never shared with other customers.</div>
       </div>
 
       <div class="docs-step">
         <div class="docs-step-label">STEP 2 — COMPOSE &amp; SEND</div>
-        <div class="docs-step-body">From <span class="k">Send SMS</span>, choose recipients (single number, a group, or an uploaded CSV), pick an <b>approved</b> sender ID from the dropdown, and write your message. Choose <span class="k">Send now</span> or <span class="k">Schedule</span> for a future date/time.</div>
-      </div>
-
-      <div class="docs-step">
-        <div class="docs-step-label">API SEND</div>
-        <div class="docs-step-body">Sending also works from your own backend using your API key from <span class="k">Settings → API Keys</span>.</div>
-        <pre class="code-block"><span class="c1">curl -X POST https://api.tunnelo.click/v1/sms/send \
-  -H</span> <span class="s1">"Authorization: Bearer YOUR_API_KEY"</span> \
-  <span class="c1">-H</span> <span class="s1">"Content-Type: application/json"</span> \
-  -d <span class="s1">'{
-    "sender_id": "YOURBRAND",
-    "to": ["+233201234567"],
-    "message": "Your order has shipped."
-  }'</span></pre>
+        <div class="docs-step-body">From <span class="k">Send SMS</span>, choose recipients — a single number, or (under <span class="k">Broadcast</span>/<span class="k">Schedule</span>) one group or all contacts — write your message, and choose <span class="k">Send now</span> or <span class="k">Schedule</span> for a future date/time.</div>
       </div>
     </section>
 
@@ -227,17 +214,17 @@
 
       <div class="docs-step">
         <div class="docs-step-label">CREATE A GROUP</div>
-        <div class="docs-step-body">Go to <span class="k">Contacts → Groups → New group</span>, name it, then add members from existing contacts, a fresh CSV upload, or a connected database table.</div>
+        <div class="docs-step-body">Go to <span class="k">Contacts → Groups → New group</span>, name it, then add members by pasting numbers, uploading a CSV/Excel file, or pulling from a table in your connected database.</div>
       </div>
 
       <div class="docs-step">
-        <div class="docs-step-label">SELECT A TABLE FOR A GROUP</div>
-        <div class="docs-step-body">With a database connected (see §01), open the group and choose <span class="k">Source → Database table</span>. Pick the table, then map its columns to <code>phone</code> and any merge-tag fields. You can add a <code>WHERE</code> filter so the group only includes rows matching a condition, e.g. <code>plan = 'active'</code>.</div>
+        <div class="docs-step-label">FROM A DATABASE TABLE</div>
+        <div class="docs-step-body">With a database connected (see §01), pick a table from the dropdown — every row with a detected <code>phone</code>/<code>mobile</code> column is pulled into the group. There's no column-mapping step or filter; if you only want a subset, prepare that subset as its own table or view first.</div>
       </div>
 
       <div class="docs-step">
         <div class="docs-step-label">USING GROUPS IN A SEND</div>
-        <div class="docs-step-body">In <span class="k">Send SMS</span>, select <span class="k">Recipients → Group</span> and pick one or more groups. Duplicate numbers across groups are sent to once per campaign.</div>
+        <div class="docs-step-body">In <span class="k">Send SMS</span>, switch to <span class="k">Broadcast</span> or <span class="k">Schedule</span>, then pick one group (or <span class="k">All Contacts</span>) as the recipient.</div>
       </div>
     </section>
 
@@ -246,31 +233,34 @@
       <p class="section-desc">Link a mobile money / payment provider so USSD payment nodes can collect money through your own merchant account.</p>
 
       <div class="docs-step">
-        <div class="docs-step-label">STEP 1 — ADD MERCHANT CREDENTIALS</div>
-        <div class="docs-step-body">Go to <span class="k">Settings → Payment Integration</span> and enter your <span class="k">Merchant ID</span> and <span class="k">API Key</span> from your payment provider. These are used on every payment node across all your USSD menus.</div>
+        <div class="docs-step-label">STEP 1 — PICK A PROVIDER</div>
+        <div class="docs-step-body">Go to <span class="k">Settings → Payment provider</span> and choose one:</div>
+        <div class="table-scroll">
+        <table class="docs-table">
+          <tr><th>Provider</th><th>Requires</th><th>Credentials</th></tr>
+          <tr><td><b>ExpressPay</b></td><td>Merchant Direct API enabled on your ExpressPay account (standard checkout/redirect credentials will not work)</td><td>Merchant ID, API Key</td></tr>
+          <tr><td><b>Hubtel</b></td><td>Receive Money (Prompt-to-Pay) enabled on your Hubtel account</td><td>Client ID, Client Secret</td></tr>
+          <tr><td><b>Custom API</b></td><td>Your own gateway, HTTPS, resolving to a public IP</td><td>API URL, optional Merchant ID / API Key</td></tr>
+        </table>
+        </div>
+        <div class="docs-step-body" style="margin-top:12px;">Money always settles directly to your own provider account — Tunnelo SU never holds customer payment funds.</div>
       </div>
 
       <div class="docs-step">
-        <div class="docs-step-label">STEP 2 — CUSTOM API (BRING YOUR OWN PROVIDER)</div>
-        <div class="docs-step-body">If your provider isn't in the built-in list, choose <span class="k">Provider → Custom API</span> and supply your own charge endpoint plus the request/response field mapping so Tunnelo SU knows how to trigger a charge and read back status.</div>
-        <pre class="code-block"><span class="c1">// Custom provider config</span>
-{
-  <span class="k1">"charge_url"</span>: <span class="s1">"https://provider.example.com/charge"</span>,
-  <span class="k1">"auth_header"</span>: <span class="s1">"Authorization: Bearer {api_key}"</span>,
-  <span class="k1">"request_map"</span>: { <span class="k1">"amount"</span>: <span class="s1">"amount"</span>, <span class="k1">"phone"</span>: <span class="s1">"msisdn"</span> },
-  <span class="k1">"response_map"</span>: { <span class="k1">"status"</span>: <span class="s1">"result.status"</span>, <span class="k1">"reference"</span>: <span class="s1">"result.txnId"</span> }
-}</pre>
-        <div class="docs-step-body" style="margin-top:12px;">On save, Tunnelo SU generates a <span class="k">signing key</span> for this custom provider (<span class="k">Provider → Custom API → Signing key</span>). Every charge request we send to your <code>charge_url</code> includes it in an <code>X-Tunnelo-Signature</code> header — an HMAC-SHA256 of the raw request body using that key. Verify it on your endpoint before processing the charge, so nobody else can call your charge URL and impersonate Tunnelo SU.</div>
-        <pre class="code-block"><span class="c1">// Incoming charge request headers</span>
-POST /charge HTTP/1.1
-<span class="k1">X-Tunnelo-Signature</span>: <span class="s1">5f8a...c21</span>  <span class="c1">// HMAC-SHA256(body, signing_key)</span>
-<span class="k1">Content-Type</span>: application/json</pre>
-        <div class="callout warn"><b>Note —</b> keep the signing key on your server only. Rotate it any time from the same settings page if you suspect it leaked.</div>
-      </div>
+        <div class="docs-step-label">STEP 2 — CUSTOM API CONTRACT</div>
+        <div class="docs-step-body">If you pick <span class="k">Custom API</span>, your endpoint must push the payment prompt straight to the payer's phone (no browser redirect) and follow this request/response shape:</div>
+        <pre class="code-block"><span class="c1">// Tunnelo SU calls your API URL</span>
+POST <span class="k1">/charge</span>
+{ <span class="k1">"merchant_id"</span>, <span class="k1">"order_id"</span>, <span class="k1">"amount"</span>, <span class="k1">"currency"</span>, <span class="k1">"phone"</span>, <span class="k1">"network"</span>, <span class="k1">"callback_url"</span> }
 
-      <div class="docs-step">
-        <div class="docs-step-label">STEP 3 — TEST THE CONNECTION</div>
-        <div class="docs-step-body">Click <span class="k">Test charge</span> to run a 1-unit test transaction against your own credentials before attaching the provider to a live payment node. A successful test shows <code>status: success</code> with a returned <code>reference</code>.</div>
+<span class="c1">// Your API responds</span>
+{ <span class="k1">"result"</span>: <span class="s1">1</span>, <span class="k1">"token"</span>: <span class="s1">"..."</span> }  <span class="c1">// result: 1=Approved, 4=Pending, 2/3=Declined</span></pre>
+        <div class="docs-step-body" style="margin-top:12px;">If a payment comes back <code>4 (Pending)</code>, notify us when it settles by POSTing to the <code>callback_url</code> we sent, with the shared secret from your settings page in an <code>X-Webhook-Secret</code> header:</div>
+        <pre class="code-block"><span class="c1">// Your system calls callback_url when the pending payment settles</span>
+POST <span class="k1">callback_url</span>
+<span class="k1">X-Webhook-Secret</span>: <span class="s1">&lt;your-secret&gt;</span>
+{ <span class="k1">"order_id"</span>, <span class="k1">"result"</span>, <span class="k1">"token"</span> }</pre>
+        <div class="callout warn"><b>Note —</b> keep that secret on your server only.</div>
       </div>
     </section>
 
@@ -279,56 +269,52 @@ POST /charge HTTP/1.1
       <p class="section-desc">Build the menu tree visually, then deploy it to your shortcode.</p>
 
       <div class="docs-step">
-        <div class="docs-step-label">STEP 1 — CREATE THE MENU</div>
-        <div class="docs-step-body">Go to <span class="k">USSD → New menu</span>, enter your registered <span class="k">shortcode</span> (e.g. <code>*789#</code>), and name the menu.</div>
-      </div>
-
-      <div class="docs-step">
-        <div class="docs-step-label">STEP 2 — ADD NODES</div>
-        <div class="docs-step-body">Add options and pick a type for each: <code>message</code> (display text and end or return to the menu), <code>submenu</code> (opens a nested set of options), or <code>payment</code> (collects an amount and charges it via the provider from §04 — set a prompt, confirmation text, and success/failure responses).</div>
+        <div class="docs-step-label">STEP 1 — BUILD THE MENU</div>
+        <div class="docs-step-body">Go to <span class="k">USSD builder</span> and name your menu. Add options and pick a type for each: <code>message</code> (display text and end or return to the menu), <code>submenu</code> (opens a nested set of options), or <code>payment</code> (collects an amount and charges it via the provider from §04 — set a prompt, confirmation text, and success/failure responses).</div>
         <div class="table-scroll">
         <table class="docs-table">
           <tr><th>Node type</th><th>Purpose</th></tr>
           <tr><td><code>message</code></td><td>Show static or dynamic text, then exit or return up a level</td></tr>
           <tr><td><code>submenu</code></td><td>Nest further numbered options under this one</td></tr>
-          <tr><td><code>payment</code></td><td>Prompt for/collect an amount, charge via your merchant account</td></tr>
+          <tr><td><code>payment</code></td><td>Prompt for/collect an amount, charge via your configured provider</td></tr>
         </table>
         </div>
       </div>
 
       <div class="docs-step">
-        <div class="docs-step-label">STEP 3 — DEPLOY</div>
-        <div class="docs-step-body">Click <span class="k">Save</span>, then <span class="k">Deploy</span>. The menu goes live on your shortcode immediately — no code, no config files, no redeploy delay.</div>
+        <div class="docs-step-label">STEP 2 — SUBMIT FOR REVIEW</div>
+        <div class="docs-step-body">Click <span class="k">Save</span>, then <span class="k">Publish</span>. This submits the menu to Tunnelo SU for review — it shows as <code>pending</code> until approved. Only one active menu can run on a given shortcode.</div>
+      </div>
+
+      <div class="docs-step">
+        <div class="docs-step-label">STEP 3 — GO LIVE</div>
+        <div class="docs-step-body">Once approved, Tunnelo SU assigns your shortcode and the menu status changes to <code>active</code> — it's now live for anyone dialing in.</div>
       </div>
     </section>
 
     <section class="docs-section" id="webhooks">
-      <h2><span class="section-num">06</span> Set up webhooks</h2>
-      <p class="section-desc">Receive delivery status and USSD payment events on your own endpoint in real time.</p>
+      <h2><span class="section-num">06</span> Trigger an SMS from your own system</h2>
+      <p class="section-desc">Webhooks on Tunnelo SU work in reverse from most platforms: your own backend calls <em>us</em>, and we send the SMS — there's no outbound event stream to subscribe to.</p>
 
       <div class="docs-step">
-        <div class="docs-step-label">STEP 1 — REGISTER AN ENDPOINT</div>
-        <div class="docs-step-body">Go to <span class="k">Settings → Webhooks → Add endpoint</span>, enter a public HTTPS URL, and choose which events to receive: <code>sms.delivered</code>, <code>sms.failed</code>, <code>ussd.payment.success</code>, <code>ussd.payment.failed</code>.</div>
+        <div class="docs-step-label">STEP 1 — CREATE A WEBHOOK</div>
+        <div class="docs-step-body">Go to <span class="k">Webhooks → New webhook</span>. Pick who receives the message — an individual contact, a group, or all contacts — and write a message template using <code>{key}</code> placeholders for values you'll send at call time, e.g. <code>{name}</code> or <code>{order_id}</code>.</div>
       </div>
 
       <div class="docs-step">
-        <div class="docs-step-label">STEP 2 — VERIFY THE SIGNATURE</div>
-        <div class="docs-step-body">Every request includes an <code>X-Tunnelo-Signature</code> header — an HMAC-SHA256 of the raw request body using the <span class="k">signing secret</span> shown on the endpoint's settings page. Reject any request whose computed signature doesn't match.</div>
-        <pre class="code-block"><span class="c1">// Example payload — sms.delivered</span>
-{
-  <span class="k1">"event"</span>: <span class="s1">"sms.delivered"</span>,
-  <span class="k1">"message_id"</span>: <span class="s1">"msg_8f2a1c"</span>,
-  <span class="k1">"to"</span>: <span class="s1">"+233201234567"</span>,
-  <span class="k1">"status"</span>: <span class="s1">"delivered"</span>,
-  <span class="k1">"timestamp"</span>: <span class="s1">"2026-07-03T22:10:04Z"</span>
-}</pre>
+        <div class="docs-step-label">STEP 2 — CALL YOUR WEBHOOK URL</div>
+        <div class="docs-step-body">Tunnelo SU gives you a unique URL. From your own backend, POST a JSON body to it whenever the trigger happens — an order ships, a payment clears, whatever fits your flow. Tunnelo SU fills the template from the fields you send and dispatches the SMS.</div>
+        <pre class="code-block"><span class="c1">// Your webhook URL</span>
+POST https://api.tunnelo.click/api/inbound/<span class="s1">&lt;token&gt;</span>
+Content-Type: application/json
+
+{ <span class="k1">"name"</span>: <span class="s1">"Efua"</span>, <span class="k1">"order_id"</span>: <span class="s1">"8f2a1c"</span> }
+
+<span class="c1">// Template: "Hi {name}, your order {order_id} has shipped."
+// Sends:    "Hi Efua, your order 8f2a1c has shipped."</span></pre>
       </div>
 
-      <div class="docs-step">
-        <div class="docs-step-label">STEP 3 — RESPOND CORRECTLY</div>
-        <div class="docs-step-body">Return a <code>2xx</code> status within 5 seconds to acknowledge receipt. Non-2xx or timeouts are retried with backoff up to 5 times; after that the event is marked <code>undelivered</code> in <span class="k">Settings → Webhooks → Logs</span>, where you can inspect and manually replay it.</div>
-        <div class="callout"><b>Tip —</b> keep the handler fast and idempotent (use <code>message_id</code> / <code>reference</code> to dedupe) since retries can deliver the same event more than once.</div>
-      </div>
+      <div class="callout warn"><b>Note —</b> the token in the URL is the only credential — there's no separate signature to verify. Keep it as secret as an API key; anyone with the URL can trigger a send on your account.</div>
     </section>
   </main>
 </div>
